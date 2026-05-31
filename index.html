@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AppieCutzz - Boeken</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
   <style>
     body {
       margin: 0;
@@ -122,6 +125,9 @@
     <label>Telefoonnummer</label>
     <input type="tel" id="phone" required>
 
+    <label>E-mail</label>
+    <input type="email" id="email" required>
+
     <label>Datum</label>
     <input type="date" id="date" required>
 
@@ -129,7 +135,7 @@
     <input type="time" id="time" required>
 
     <label>Optie</label>
-    <select id="service">
+    <select id="service" required>
       <option value="Knippen">Knippen - €10</option>
       <option value="Baard">Baard - €10</option>
       <option value="Knippen + Baard">Knippen + Baard - €10</option>
@@ -143,7 +149,7 @@
 
     <div class="price" id="price">Totaal: €10,00</div>
 
-    <button type="submit">Boeking maken</button>
+    <button type="submit" id="submitBtn">Boeking maken</button>
   </form>
 
   <div id="message" class="message"></div>
@@ -157,10 +163,15 @@
 </footer>
 
 <script>
+  emailjs.init({
+    publicKey: "Y5ZRYgbti5gohuVmx"
+  });
+
   const form = document.getElementById("bookingForm");
   const drink = document.getElementById("drink");
   const price = document.getElementById("price");
   const message = document.getElementById("message");
+  const submitBtn = document.getElementById("submitBtn");
 
   drink.addEventListener("change", updatePrice);
 
@@ -170,7 +181,7 @@
   }
 
   function isOpen(dateValue, timeValue) {
-    const date = new Date(dateValue);
+    const date = new Date(dateValue + "T00:00:00");
     const day = date.getDay();
 
     const minutes = timeToMinutes(timeValue);
@@ -196,11 +207,12 @@
     return hours * 60 + minutes;
   }
 
-  form.addEventListener("submit", function(e) {
+  form.addEventListener("submit", async function(e) {
     e.preventDefault();
 
-    const name = document.getElementById("name").value;
-    const phone = document.getElementById("phone").value;
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const email = document.getElementById("email").value.trim();
     const date = document.getElementById("date").value;
     const time = document.getElementById("time").value;
     const service = document.getElementById("service").value;
@@ -212,46 +224,37 @@
       return;
     }
 
-    const booking = {
-      naam: name,
-      telefoon: phone,
-      datum: date,
-      tijd: time,
-      optie: service,
-      drinken: hasDrink ? "Ja" : "Nee",
-      totaal: total
-    };
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Bezig met verzenden...";
 
-    let bookings = JSON.parse(localStorage.getItem("appiecutzzBookings")) || [];
+    try {
+      await emailjs.send(
+        "service_wo5zzw1",
+        "template_x8i5nwh",
+        {
+          klant_naam: name,
+          klant_tel: phone,
+          klant_email: email,
+          datum: date,
+          tijdslot: time,
+          dienst: service,
+          prijs: total,
+          opmerking: hasDrink ? "Drankje erbij" : "Geen drankje"
+        }
+      );
 
-    const exists = bookings.some(b => b.datum === date && b.tijd === time);
+      showMessage("Boeking gelukt! AppieCutzz heeft je afspraak ontvangen.", "success");
 
-    if (exists) {
-      showMessage("Deze tijd is al geboekt. Kies een andere tijd.", "error");
-      return;
+      form.reset();
+      updatePrice();
+
+    } catch (error) {
+      console.log(error);
+      showMessage("Er ging iets mis met verzenden. Probeer opnieuw.", "error");
     }
 
-    bookings.push(booking);
-    localStorage.setItem("appiecutzzBookings", JSON.stringify(bookings));
-
-    showMessage("Boeking gelukt! Maak een screenshot of stuur je afspraak door via WhatsApp.", "success");
-
-    const whatsappText =
-      `Nieuwe boeking AppieCutzz:%0A` +
-      `Naam: ${name}%0A` +
-      `Telefoon: ${phone}%0A` +
-      `Datum: ${date}%0A` +
-      `Tijd: ${time}%0A` +
-      `Optie: ${service}%0A` +
-      `Drinken: ${hasDrink ? "Ja" : "Nee"}%0A` +
-      `Totaal: ${total}`;
-
-    setTimeout(() => {
-      window.open(`https://wa.me/?text=${whatsappText}`, "_blank");
-    }, 1000);
-
-    form.reset();
-    updatePrice();
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Boeking maken";
   });
 
   function showMessage(text, type) {
