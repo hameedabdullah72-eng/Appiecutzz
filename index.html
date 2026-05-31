@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AppieCutzz - Boeken</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0d0d0d;
+      color: white;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 20px;
+      background: #111;
+      border-bottom: 2px solid #d4af37;
+    }
+
+    header img {
+      width: 120px;
+      border-radius: 50%;
+    }
+
+    h1 {
+      color: #d4af37;
+      margin-bottom: 5px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: #181818;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(212,175,55,0.25);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 7px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    input, select {
+      background: #2a2a2a;
+      color: white;
+    }
+
+    button {
+      background: #d4af37;
+      color: black;
+      font-weight: bold;
+      margin-top: 25px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #f1c94c;
+    }
+
+    .price {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #d4af37;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .message {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
+      text-align: center;
+    }
+
+    .success {
+      background: #123d1f;
+      color: #8cffaa;
+    }
+
+    .error {
+      background: #3d1212;
+      color: #ff8c8c;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="AppieCutzz logo">
+  <h1>AppieCutzz</h1>
+  <p>Boek makkelijk je knipbeurt</p>
+</header>
+
+<div class="container">
+  <h2>Afspraak boeken</h2>
+
+  <form id="bookingForm">
+    <label>Naam</label>
+    <input type="text" id="name" required>
+
+    <label>Telefoonnummer</label>
+    <input type="tel" id="phone" required>
+
+    <label>Datum</label>
+    <input type="date" id="date" required>
+
+    <label>Tijd</label>
+    <input type="time" id="time" required>
+
+    <label>Optie</label>
+    <select id="service">
+      <option value="Knippen">Knippen - €10</option>
+      <option value="Baard">Baard - €10</option>
+      <option value="Knippen + Baard">Knippen + Baard - €10</option>
+      <option value="Taper/Fade">Taper/Fade - €10</option>
+    </select>
+
+    <label>
+      <input type="checkbox" id="drink" style="width:auto;">
+      Drinken erbij + €1,50
+    </label>
+
+    <div class="price" id="price">Totaal: €10,00</div>
+
+    <button type="submit">Boeking maken</button>
+  </form>
+
+  <div id="message" class="message"></div>
+</div>
+
+<footer>
+  Openingstijden:<br>
+  Maandag & woensdag: 15:30 - 18:30<br>
+  Dinsdag & donderdag: 15:30 - 20:00<br>
+  Vrijdag: 16:45 - 20:00
+</footer>
+
+<script>
+  const form = document.getElementById("bookingForm");
+  const drink = document.getElementById("drink");
+  const price = document.getElementById("price");
+  const message = document.getElementById("message");
+
+  drink.addEventListener("change", updatePrice);
+
+  function updatePrice() {
+    const total = drink.checked ? 11.50 : 10;
+    price.textContent = "Totaal: €" + total.toFixed(2).replace(".", ",");
+  }
+
+  function isOpen(dateValue, timeValue) {
+    const date = new Date(dateValue);
+    const day = date.getDay();
+
+    const minutes = timeToMinutes(timeValue);
+
+    const openingHours = {
+      1: ["15:30", "18:30"],
+      2: ["15:30", "20:00"],
+      3: ["15:30", "18:30"],
+      4: ["15:30", "20:00"],
+      5: ["16:45", "20:00"]
+    };
+
+    if (!openingHours[day]) return false;
+
+    const open = timeToMinutes(openingHours[day][0]);
+    const close = timeToMinutes(openingHours[day][1]);
+
+    return minutes >= open && minutes <= close;
+  }
+
+  function timeToMinutes(time) {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+  }
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const date = document.getElementById("date").value;
+    const time = document.getElementById("time").value;
+    const service = document.getElementById("service").value;
+    const hasDrink = drink.checked;
+    const total = hasDrink ? "€11,50" : "€10,00";
+
+    if (!isOpen(date, time)) {
+      showMessage("Deze tijd valt buiten de openingstijden.", "error");
+      return;
+    }
+
+    const booking = {
+      naam: name,
+      telefoon: phone,
+      datum: date,
+      tijd: time,
+      optie: service,
+      drinken: hasDrink ? "Ja" : "Nee",
+      totaal: total
+    };
+
+    let bookings = JSON.parse(localStorage.getItem("appiecutzzBookings")) || [];
+
+    const exists = bookings.some(b => b.datum === date && b.tijd === time);
+
+    if (exists) {
+      showMessage("Deze tijd is al geboekt. Kies een andere tijd.", "error");
+      return;
+    }
+
+    bookings.push(booking);
+    localStorage.setItem("appiecutzzBookings", JSON.stringify(bookings));
+
+    showMessage("Boeking gelukt! Maak een screenshot of stuur je afspraak door via WhatsApp.", "success");
+
+    const whatsappText =
+      `Nieuwe boeking AppieCutzz:%0A` +
+      `Naam: ${name}%0A` +
+      `Telefoon: ${phone}%0A` +
+      `Datum: ${date}%0A` +
+      `Tijd: ${time}%0A` +
+      `Optie: ${service}%0A` +
+      `Drinken: ${hasDrink ? "Ja" : "Nee"}%0A` +
+      `Totaal: ${total}`;
+
+    setTimeout(() => {
+      window.open(`https://wa.me/?text=${whatsappText}`, "_blank");
+    }, 1000);
+
+    form.reset();
+    updatePrice();
+  });
+
+  function showMessage(text, type) {
+    message.textContent = text;
+    message.className = "message " + type;
+    message.style.display = "block";
+  }
+</script>
+
+</body>
+</html>
