@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Appiecutzz — Premium Barber</title>
+<title>Appiecutzz â€” Premium Barber</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
@@ -20,7 +20,7 @@ html{scroll-behavior:smooth;}
   --cream:#d9d0bc;
   --stripe:rgba(200,168,75,.07);
 }
-body{background:var(--navy);color:var(--white);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;}
+body{background:var(--navy);color:var(--white);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:auto;}
 body::before{content:'';position:fixed;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 79px,var(--stripe) 79px,var(--stripe) 80px),repeating-linear-gradient(90deg,transparent,transparent 79px,var(--stripe) 79px,var(--stripe) 80px);pointer-events:none;z-index:0;}
 .cursor{width:10px;height:10px;background:var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;}
 .cursor-ring{width:32px;height:32px;border:1px solid var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.5;}
@@ -51,9 +51,9 @@ h1 span{color:var(--gold);}
 .hero-sub{font-family:'Cinzel',serif;font-size:.8rem;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);opacity:.8;margin-bottom:1.5rem;}
 .hero-desc{font-size:1.15rem;font-style:italic;color:var(--cream);opacity:.75;max-width:480px;line-height:1.8;margin:0 auto 2.5rem;}
 .hero-cta{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;}
-.btn-gold{font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);background:var(--gold);border:none;padding:.95rem 2.2rem;text-decoration:none;display:inline-block;cursor:none;transition:background .2s,transform .15s;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);}
+.btn-gold{font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);background:var(--gold);border:none;padding:.95rem 2.2rem;text-decoration:none;display:inline-block;cursor:auto;transition:background .2s,transform .15s;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);}
 .btn-gold:hover{background:var(--gold-lite);transform:translateY(-2px);}
-.btn-outline{font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);background:transparent;border:1px solid rgba(200,168,75,.4);padding:.95rem 2.2rem;text-decoration:none;display:inline-block;cursor:none;transition:border-color .2s,color .2s;}
+.btn-outline{font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);background:transparent;border:1px solid rgba(200,168,75,.4);padding:.95rem 2.2rem;text-decoration:none;display:inline-block;cursor:auto;transition:border-color .2s,color .2s;}
 .btn-outline:hover{border-color:var(--gold);color:var(--gold-lite);}
 .hero-stats{display:flex;gap:3rem;justify-content:center;margin-top:3.5rem;padding-top:2rem;border-top:1px solid rgba(200,168,75,.2);flex-wrap:wrap;}
 .stat-n{font-family:'Cinzel Decorative',serif;font-size:2rem;color:var(--gold);display:block;margin-bottom:.2rem;}
@@ -102,12 +102,12 @@ h2{font-family:'Cinzel Decorative',serif;font-size:clamp(2rem,4vw,3rem);font-wei
 .booking-intro p{font-size:1.05rem;font-style:italic;color:var(--cream);opacity:.65;line-height:1.8;margin-bottom:1.2rem;}
 .booking-rules{list-style:none;margin-top:1.5rem;}
 .booking-rules li{font-family:'Cinzel',serif;font-size:.7rem;font-weight:600;letter-spacing:.1em;color:var(--cream);opacity:.6;padding:.7rem 0;border-bottom:1px solid rgba(200,168,75,.1);display:flex;align-items:center;gap:.6rem;}
-.booking-rules li::before{content:'◆';color:var(--gold);font-size:.5rem;}
+.booking-rules li::before{content:'â—†';color:var(--gold);font-size:.5rem;}
 .booking-form{display:flex;flex-direction:column;gap:.9rem;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
 .form-group{display:flex;flex-direction:column;gap:.35rem;}
 .form-label{font-family:'Cinzel',serif;font-size:.6rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,168,75,.7);}
-.form-input,.form-select{background:var(--navy-mid);border:1px solid rgba(200,168,75,.2);color:var(--white);font-family:'EB Garamond',serif;font-size:1rem;padding:.8rem 1rem;outline:none;cursor:none;transition:border-color .2s;width:100%;-webkit-appearance:none;appearance:none;}
+.form-input,.form-select{background:var(--navy-mid);border:1px solid rgba(200,168,75,.2);color:var(--white);font-family:'EB Garamond',serif;font-size:1rem;padding:.8rem 1rem;outline:none;cursor:auto;transition:border-color .2s;width:100%;-webkit-appearance:none;appearance:none;}
 .form-input::placeholder{color:rgba(240,236,228,.25);}
 .form-input:focus,.form-select:focus{border-color:var(--gold);}
 .form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23c8a84b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem;}
@@ -116,15 +116,15 @@ input[type="date"]{color-scheme:dark;}
 .date-error{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.08em;color:#f47;margin-top:.3rem;display:none;}
 .date-error.show{display:block;}
 #time-options{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.25rem;}
-.time-btn{font-family:'Cinzel',serif;font-size:.65rem;font-weight:600;letter-spacing:.1em;background:var(--navy-mid);border:1px solid rgba(200,168,75,.2);color:var(--cream);padding:.5rem .9rem;cursor:none;transition:all .15s;}
+.time-btn{font-family:'Cinzel',serif;font-size:.65rem;font-weight:600;letter-spacing:.1em;background:var(--navy-mid);border:1px solid rgba(200,168,75,.2);color:var(--cream);padding:.5rem .9rem;cursor:auto;transition:all .15s;}
 .time-btn:hover,.time-btn.selected{background:var(--gold);color:var(--navy);border-color:var(--gold);}
 .extras-group{display:flex;flex-direction:column;gap:.5rem;padding:.7rem 0;border-top:1px solid rgba(200,168,75,.1);}
 .extras-label{font-family:'Cinzel',serif;font-size:.6rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,168,75,.7);margin-bottom:.2rem;}
-.check-row{display:flex;align-items:center;gap:.8rem;cursor:none;}
-.check-row input[type="checkbox"]{width:17px;height:17px;appearance:none;flex-shrink:0;border:1px solid rgba(200,168,75,.35);background:var(--navy-mid);cursor:none;position:relative;transition:border-color .2s;}
+.check-row{display:flex;align-items:center;gap:.8rem;cursor:auto;}
+.check-row input[type="checkbox"]{width:17px;height:17px;appearance:none;flex-shrink:0;border:1px solid rgba(200,168,75,.35);background:var(--navy-mid);cursor:auto;position:relative;transition:border-color .2s;}
 .check-row input[type="checkbox"]:checked{background:var(--gold);border-color:var(--gold);}
-.check-row input[type="checkbox"]:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--navy);font-size:11px;font-weight:700;}
-.check-label{font-size:.95rem;font-style:italic;color:var(--cream);opacity:.7;cursor:none;}
+.check-row input[type="checkbox"]:checked::after{content:'âœ“';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--navy);font-size:11px;font-weight:700;}
+.check-label{font-size:.95rem;font-style:italic;color:var(--cream);opacity:.7;cursor:auto;}
 .check-label strong{color:var(--gold);font-style:normal;}
 .price-bar{background:var(--navy-mid);border:1px solid rgba(200,168,75,.3);padding:1.1rem 1.4rem;display:flex;justify-content:space-between;align-items:center;}
 .price-bar-label{font-family:'Cinzel',serif;font-size:.65rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,168,75,.6);}
@@ -137,7 +137,7 @@ input[type="date"]{color-scheme:dark;}
 .form-alert{padding:.75rem 1rem;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.08em;display:none;}
 .form-alert.err{background:rgba(150,40,40,.2);border:1px solid rgba(200,60,60,.3);color:#f47;display:block;}
 .form-alert.ok{background:rgba(40,100,60,.2);border:1px solid rgba(60,160,80,.3);color:#6d9;display:block;}
-.submit-btn{font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);background:var(--gold);border:none;padding:.95rem 2.2rem;width:100%;cursor:none;transition:background .2s,opacity .2s;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);}
+.submit-btn{font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);background:var(--gold);border:none;padding:.95rem 2.2rem;width:100%;cursor:auto;transition:background .2s,opacity .2s;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);}
 .submit-btn:hover:not(:disabled){background:var(--gold-lite);}
 .submit-btn:disabled{opacity:.5;}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(5,12,24,.88);z-index:200;align-items:center;justify-content:center;}
@@ -149,7 +149,7 @@ input[type="date"]{color-scheme:dark;}
 .modal-icon{font-size:2.8rem;margin-bottom:1.2rem;display:block;}
 .modal h3{font-family:'Cinzel Decorative',serif;font-size:1.6rem;color:var(--gold);margin-bottom:.4rem;}
 .modal p{font-size:1rem;font-style:italic;color:var(--cream);opacity:.7;line-height:1.7;margin:.3rem 0;}
-.modal-close{margin-top:2rem;font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);background:var(--gold);border:none;padding:.9rem 2rem;cursor:none;transition:background .2s;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);}
+.modal-close{margin-top:2rem;font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);background:var(--gold);border:none;padding:.9rem 2rem;cursor:auto;transition:background .2s;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);}
 .modal-close:hover{background:var(--gold-lite);}
 footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid rgba(200,168,75,.2);padding:2.5rem 3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
 .footer-logo{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold);text-decoration:none;}
@@ -392,9 +392,11 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
 </div>
 
 <script>
-emailjs.init({ publicKey: "Y5ZRYgbti5gohuVmx" });
+const EMAILJS_PUBLIC_KEY = "Y5ZRYgbti5gohuVmx";
 const EMAILJS_SERVICE  = "service_wo5zzw1";
 const EMAILJS_TEMPLATE = "template_x8i5nwh";
+const EMAILJS_AVAILABLE = typeof window.emailjs !== 'undefined';
+if (EMAILJS_AVAILABLE) { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); }
 
 const cur=document.getElementById('cur'),ring=document.getElementById('ring');
 let mx=0,my=0,rx=0,ry=0;
@@ -433,7 +435,7 @@ document.getElementById('date').addEventListener('change',function(){
   document.getElementById('time').value='';
   if(!schedule[idx]){
     err.classList.add('show');
-    container.innerHTML='<span style="font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;color:rgba(240,236,228,.25);">Gesloten op deze dag</span>';
+    container.innerHTML="<span style=\"font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;color:rgba(240,236,228,.25);\">Gesloten op deze dag</span>";
     window._dateLabel='';return;
   }
   err.classList.remove('show');
@@ -455,7 +457,7 @@ function updatePrice(){
   if(hasDrink) total+=1.5;
   if(hasTikkie) total=15;
   if(hasDrink && hasTikkie) total=15;
-  document.getElementById('priceTotal').textContent='&#8364;'+total.toFixed(2).replace('.',',');
+  document.getElementById('priceTotal').innerHTML='&#8364;'+total.toFixed(2).replace('.',',');
   const notice=document.getElementById('tikkieNotice');
   if(hasTikkie){notice.classList.add('show');}
   else{notice.classList.remove('show');}
@@ -483,6 +485,12 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
 
   btn.disabled=true;btn.textContent='Bezig met verzenden...';showAlert('','');
 
+  if(!EMAILJS_AVAILABLE){
+    showAlert('Mailservice niet geladen. Check je internetverbinding en probeer opnieuw.','err');
+    btn.disabled=false;btn.innerHTML='Bevestig Afspraak &nbsp; &#10022;';
+    return;
+  }
+
   const extras=[];
   if(hasDrink) extras.push('Drankje (+&#8364;1,50)');
   if(hasTikkie) extras.push('Tikkie aanbetaling (&#8364;15)');
@@ -496,25 +504,25 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
       tijdslot:time,
       dienst:service,
       prijs:totalStr,
-      opmerking:extras.length?extras.join(', '):'Geen extra's'
+      opmerking:extras.length?extras.join(', '):"Geen extra's"
     });
 
-    document.getElementById('mName').textContent='Hey '+name+' &#128075;';
-    document.getElementById('mDetails').textContent=(window._dateLabel)+' om '+time+' &#8212; '+service;
-    document.getElementById('mPrice').textContent='Totaal: '+totalStr;
+    document.getElementById('mName').innerHTML='Hey '+name+' &#128075;';
+    document.getElementById('mDetails').innerHTML=(window._dateLabel)+' om '+time+' &#8212; '+service;
+    document.getElementById('mPrice').innerHTML='Totaal: '+totalStr;
     const mt=document.getElementById('mTikkie');
-    if(hasTikkie){mt.style.display='block';mt.textContent='Vergeet niet &#8364;15 te tikkie'en om je plek vast te zetten!';}
+    if(hasTikkie){mt.style.display='block';mt.innerHTML='Vergeet niet &#8364;15 te tikkie-en om je plek vast te zetten!';}
     else{mt.style.display='none';}
     document.getElementById('modalOverlay').classList.add('on');
 
     this.reset();updatePrice();
-    document.getElementById('time-options').innerHTML='<span style="font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;color:rgba(240,236,228,.25);">Kies eerst een datum hierboven</span>';
+    document.getElementById('time-options').innerHTML="<span style=\"font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;color:rgba(240,236,228,.25);\">Kies eerst een datum hierboven</span>";
     window._dateLabel='';
   }catch(err){
-    showAlert('Verzenden mislukt. Probeer opnieuw.','err');
+    showAlert('Verzenden mislukt. Controleer je EmailJS instellingen of probeer opnieuw.','err');
     console.error(err);
   }
-  btn.disabled=false;btn.textContent='Bevestig Afspraak &#10022;';
+  btn.disabled=false;btn.innerHTML='Bevestig Afspraak &nbsp; &#10022;';
 });
 
 function showAlert(msg,type){
@@ -526,3 +534,7 @@ function closeModal(){document.getElementById('modalOverlay').classList.remove('
 </script>
 </body>
 </html>
+
+
+
+
