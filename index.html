@@ -37,10 +37,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .marquee-item{font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--navy);padding:0 2.2rem;}
 .m-sep{opacity:.4;}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.location-strip{position:relative;z-index:1;background:var(--navy-mid);border-bottom:1px solid rgba(200,168,75,.25);padding:.95rem 1.5rem;text-align:center;}
-.location-label{font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.25rem;}
-.location-text{font-family:'EB Garamond',serif;font-size:1.05rem;color:var(--cream);font-style:italic;}
-.location-text strong{color:var(--white);font-style:normal;}
 .hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 4rem;overflow:hidden;}
 .hero::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(ellipse,rgba(200,168,75,.07) 0%,transparent 70%);pointer-events:none;}
 .hero-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(200,168,75,.12);pointer-events:none;}
@@ -71,6 +67,13 @@ h2{font-family:'Cinzel Decorative',serif;font-size:clamp(2rem,4vw,3rem);font-wei
 .divider-diamond{width:8px;height:8px;background:var(--gold);transform:rotate(45deg);flex-shrink:0;}
 .corner-deco{position:absolute;pointer-events:none;width:50px;height:50px;opacity:.2;border-color:var(--gold);border-style:solid;}
 .c-tl{top:2rem;left:2rem;border-width:1px 0 0 1px}.c-tr{top:2rem;right:2rem;border-width:1px 1px 0 0}.c-bl{bottom:2rem;left:2rem;border-width:0 0 1px 1px}.c-br{bottom:2rem;right:2rem;border-width:0 1px 1px 0}
+#location{background:var(--navy);}
+.location-panel{margin-top:2.2rem;border-top:1px solid rgba(200,168,75,.25);border-bottom:1px solid rgba(200,168,75,.25);padding:2rem 0;display:grid;grid-template-columns:1fr 1.5fr;gap:2rem;align-items:center;}
+.location-kicker{font-family:'Cinzel',serif;font-size:.65rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);}
+.location-address{font-family:'Cinzel Decorative',serif;font-size:clamp(1.8rem,4vw,3rem);color:var(--white);line-height:1.1;}
+.location-route{font-size:1.15rem;font-style:italic;color:var(--cream);opacity:.72;line-height:1.7;}
+.location-route strong{color:var(--gold);font-style:normal;}
+@media(max-width:800px){.location-panel{grid-template-columns:1fr;gap:1rem;}}
 #services{background:var(--navy-mid);}
 .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:rgba(200,168,75,.15);border:1px solid rgba(200,168,75,.15);margin-top:3rem;}
 .svc{background:var(--navy-mid);padding:2.2rem 2rem;position:relative;overflow:hidden;transition:background .2s;}
@@ -188,6 +191,7 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
   <ul class="nav-links">
     <li><a href="#services">Diensten</a></li>
     <li><a href="#photos">Werk</a></li>
+    <li><a href="#location">Locatie</a></li>
     <li><a href="#hours">Tijden</a></li>
     <li><a href="#booking">Boeken</a></li>
   </ul>
@@ -213,11 +217,6 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
     <span class="marquee-item">The Barber&#39;s Touch</span><span class="marquee-item m-sep">&#9670;</span>
   </div>
 </div>
-<div class="location-strip">
-  <span class="location-label">Locatie</span>
-  <div class="location-text"><strong>Romboutsstraat 55</strong> &mdash; via steegje, rode deur</div>
-</div>
-
 <section class="hero">
   <div class="hero-ring" style="width:500px;height:500px;"></div>
   <div class="hero-ring" style="width:650px;height:650px;opacity:.06;"></div>
@@ -244,6 +243,21 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
   </div>
 </section>
 
+<section id="location">
+  <div class="corner-deco c-tl"></div><div class="corner-deco c-tr"></div><div class="corner-deco c-bl"></div><div class="corner-deco c-br"></div>
+  <div class="section-inner">
+    <div class="sec-badge">&#9670; &nbsp; Waar je moet zijn</div>
+    <h2>Locatie</h2>
+    <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
+    <div class="location-panel">
+      <div>
+        <div class="location-kicker">Adres</div>
+        <div class="location-address">Romboutsstraat 55</div>
+      </div>
+      <p class="location-route">Loop <strong>via het steegje</strong> naar binnen en ga naar de <strong>rode deur</strong>.</p>
+    </div>
+  </div>
+</section>
 <section id="services">
   <div class="corner-deco c-tl"></div><div class="corner-deco c-tr"></div><div class="corner-deco c-bl"></div><div class="corner-deco c-br"></div>
   <div class="section-inner">
@@ -605,6 +619,8 @@ function closeModal(){document.getElementById('modalOverlay').classList.remove('
 </script>
 </body>
 </html>
+
+
 
 
 
