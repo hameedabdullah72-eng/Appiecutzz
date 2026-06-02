@@ -152,6 +152,9 @@ input[type="date"]{color-scheme:dark;}
 .modal h3{font-family:'Cinzel Decorative',serif;font-size:1.6rem;color:var(--gold);margin-bottom:.4rem;}
 .modal p{font-size:1rem;font-style:italic;color:var(--cream);opacity:.7;line-height:1.7;margin:.3rem 0;}
 .modal-close{margin-top:2rem;font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);background:var(--gold);border:none;padding:.9rem 2rem;cursor:auto;transition:background .2s;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);}
+.calendar-actions{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;margin-top:1.4rem;}
+.calendar-btn{font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);background:transparent;border:1px solid rgba(200,168,75,.45);padding:.7rem .9rem;cursor:auto;text-decoration:none;transition:border-color .2s,color .2s;}
+.calendar-btn:hover{border-color:var(--gold);color:var(--gold-lite);}
 .modal-close:hover{background:var(--gold-lite);}
 footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid rgba(200,168,75,.2);padding:2.5rem 3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
 .footer-logo{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold);text-decoration:none;}
@@ -376,6 +379,10 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
     <p id="mDetails"></p>
     <p id="mPrice"></p>
     <p id="mTikkie" style="display:none;color:var(--gold);font-weight:600;"></p>
+    <div class="calendar-actions">
+      <a class="calendar-btn" id="googleCalendarLink" href="#" target="_blank" rel="noopener">Google Agenda</a>
+      <button type="button" class="calendar-btn" id="icsCalendarBtn" onclick="downloadCalendarEvent()">Agenda bestand</button>
+    </div>
     <p style="margin-top:1rem;font-size:.85rem;opacity:.4;">Kom op tijd. Tot zo!</p>
     <button class="modal-close" onclick="closeModal()">Sluiten</button>
   </div>
@@ -483,6 +490,45 @@ function updatePrice(){
   document.getElementById('priceTotal').innerHTML='&#8364;'+total.toFixed(2).replace('.',',');
 }
 
+function calendarDateTime(dateValue,time,addMinutes){
+  const parts=dateValue.split('-').map(Number);
+  const hm=time.split(':').map(Number);
+  const dt=new Date(parts[0],parts[1]-1,parts[2],hm[0],hm[1]+(addMinutes||0),0);
+  return dt;
+}
+function toGoogleDate(dt){
+  return dt.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+}
+function toIcsDate(dt){
+  return toGoogleDate(dt);
+}
+function escapeIcs(text){
+  return String(text).replace(/\\/g,'\\\\').replace(/,/g,'\\,').replace(/;/g,'\\;').replace(/\n/g,'\\n');
+}
+function setupCalendarEvent(dateValue,time,service,name){
+  const start=calendarDateTime(dateValue,time,0);
+  const end=calendarDateTime(dateValue,time,45);
+  const title='Appiecutzz - '+service;
+  const details='Afspraak bij Appiecutzz voor '+name+'. Kom op tijd.';
+  const googleUrl='https://calendar.google.com/calendar/render?action=TEMPLATE'
+    +'&text='+encodeURIComponent(title)
+    +'&dates='+toGoogleDate(start)+'/'+toGoogleDate(end)
+    +'&details='+encodeURIComponent(details);
+  document.getElementById('googleCalendarLink').href=googleUrl;
+  window._calendarIcs='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Appiecutzz//Booking//NL\r\nBEGIN:VEVENT\r\nUID:'+Date.now()+'@appiecutzz\r\nDTSTAMP:'+toIcsDate(new Date())+'\r\nDTSTART:'+toIcsDate(start)+'\r\nDTEND:'+toIcsDate(end)+'\r\nSUMMARY:'+escapeIcs(title)+'\r\nDESCRIPTION:'+escapeIcs(details)+'\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n';
+}
+function downloadCalendarEvent(){
+  if(!window._calendarIcs)return;
+  const blob=new Blob([window._calendarIcs],{type:'text/calendar;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='appiecutzz-afspraak.ics';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
 document.getElementById('bookingForm').addEventListener('submit',async function(e){
   e.preventDefault();
   const name=document.getElementById('name').value.trim();
@@ -528,6 +574,7 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
     document.getElementById('mDetails').innerHTML=(window._dateLabel)+' om '+time+' &#8212; '+service;
     document.getElementById('mPrice').innerHTML='Totaal: '+totalStr;
     document.getElementById('mTikkie').style.display='none';
+        setupCalendarEvent(window._selectedDateValue,time,service,name);
     saveBookedSlot(window._selectedDateValue,time);
     document.getElementById('modalOverlay').classList.add('on');
 
@@ -550,6 +597,10 @@ function closeModal(){document.getElementById('modalOverlay').classList.remove('
 </script>
 </body>
 </html>
+
+
+
+
 
 
 
