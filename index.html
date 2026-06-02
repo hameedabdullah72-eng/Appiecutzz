@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Appiecutzz Barber</title>
+<title>Appiecutzz â€” Premium Barber</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
@@ -37,6 +37,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .marquee-item{font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--navy);padding:0 2.2rem;}
 .m-sep{opacity:.4;}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.location-strip{position:relative;z-index:1;background:var(--navy-mid);border-bottom:1px solid rgba(200,168,75,.25);padding:.95rem 1.5rem;text-align:center;}
+.location-label{font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.25rem;}
+.location-text{font-family:'EB Garamond',serif;font-size:1.05rem;color:var(--cream);font-style:italic;}
+.location-text strong{color:var(--white);font-style:normal;}
 .hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 4rem;overflow:hidden;}
 .hero::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(ellipse,rgba(200,168,75,.07) 0%,transparent 70%);pointer-events:none;}
 .hero-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(200,168,75,.12);pointer-events:none;}
@@ -208,6 +212,10 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
     <span class="marquee-item">&#8364;10 per cut</span><span class="marquee-item m-sep">&#9670;</span>
     <span class="marquee-item">The Barber&#39;s Touch</span><span class="marquee-item m-sep">&#9670;</span>
   </div>
+</div>
+<div class="location-strip">
+  <span class="location-label">Locatie</span>
+  <div class="location-text"><strong>Romboutsstraat 55</strong> &mdash; via steegje, rode deur</div>
 </div>
 
 <section class="hero">
@@ -597,6 +605,8 @@ function closeModal(){document.getElementById('modalOverlay').classList.remove('
 </script>
 </body>
 </html>
+
+
 
 
 
