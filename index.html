@@ -267,11 +267,11 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
     <div class="sec-badge">&#9670; &nbsp; Wat ik aanbied</div>
     <h2>Diensten</h2>
     <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
-    <p style="font-style:italic;color:var(--cream);opacity:.55;max-width:500px;">Knippen is &euro;10. Knippen met baard is &euro;12,50. Drankjes zijn tijdelijk op.</p>
+    <p style="font-style:italic;color:var(--cream);opacity:.55;max-width:500px;">Knippen is &euro;10. Knippen met baard is &euro;12,50. Drankje erbij is &euro;1,50.</p>
     <div class="services-grid">
       <div class="svc"><span class="svc-icon">&#9986;&#65039;</span><div class="svc-name">Knippen</div><p class="svc-desc">Jouw stijl, mijn vakmanschap. Van klassiek tot modern &mdash; altijd scherp.</p><div class="svc-price">&euro;10</div></div>
       <div class="svc"><span class="svc-icon">&#128081;</span><div class="svc-name">Knippen met baard</div><p class="svc-desc">Haar en baard netjes strak afgewerkt in &eacute;&eacute;n afspraak.</p><div class="svc-price">&euro;12,50</div></div>
-      <div class="svc"><span class="svc-icon">&#127865;</span><div class="svc-name">Drankje</div><p class="svc-desc">Drankjes zijn tijdelijk op. Binnenkort weer beschikbaar.</p><div class="svc-price">Op</div><div class="svc-sub">Tijdelijk niet beschikbaar</div></div>
+      <div class="svc"><span class="svc-icon">&#127865;</span><div class="svc-name">Drankje</div><p class="svc-desc">Fris drankje erbij tijdens je afspraak.</p><div class="svc-price">&euro;1,50</div><div class="svc-sub">Extra optie</div></div>
     </div>
   </div>
 </section>
@@ -326,7 +326,7 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
           <li>Knippen: &euro;10</li>
           <li>Knippen met baard: &euro;12,50</li>
           <li>Betalen via Tikkie: &euro;15</li>
-          <li>Drankjes tijdelijk op</li>
+          <li>Drankje erbij: &euro;1,50</li>
           <li>Kom op tijd &mdash; je slot vervalt anders</li>
           <li>Volg @appiecutzz op TikTok</li>
         </ul>
@@ -370,8 +370,8 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
           <div class="extras-group">
             <div class="extras-label">Extra opties</div>
             <div class="check-row">
-              <input type="checkbox" id="drink" onchange="updatePrice()" disabled>
-              <label class="check-label" for="drink">Drankje erbij &mdash; <strong>tijdelijk op</strong></label>
+              <input type="checkbox" id="drink" onchange="updatePrice()">
+              <label class="check-label" for="drink">Drankje erbij &mdash; <strong>&euro;1,50</strong></label>
             </div>
 
           </div>
@@ -699,6 +699,7 @@ function closeModal(){document.getElementById('modalOverlay').classList.remove('
 </script>
 </body>
 </html>
+
 
 
 
