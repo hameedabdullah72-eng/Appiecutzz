@@ -360,7 +360,7 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
           </div>
           <div class="form-group">
             <label class="form-label" for="service">Dienst</label>
-            <select class="form-select" id="service" onchange="updatePrice()" required>
+            <select class="form-select" id="service" onchange="updatePrice();refreshTimeSlotsForService()" required>
               <option value="">&#8212; Kies een dienst &#8212;</option>
               <option value="Knippen met bovenkant">Knippen met bovenkant - &euro;10 - 35 min</option>
               <option value="Knippen met baard">Knippen met baard - &euro;12,50 - 45 min</option>
@@ -516,27 +516,61 @@ function getBookedSlots(){
     Object.keys(source).forEach(date=>{
       const current=booked[date]||[];
       const extra=Array.isArray(source[date])?source[date]:[];
-      booked[date]=Array.from(new Set([...current,...extra]));
+      booked[date]=[...current,...extra];
     });
   });
   return booked;
 }
-function isBookedSlot(dateValue,time){
-  const booked=getBookedSlots();
-  return Array.isArray(booked[dateValue]) && booked[dateValue].includes(time);
+function timeToMinutes(time){
+  const parts=String(time||'').split(':').map(Number);
+  return (parts[0]||0)*60+(parts[1]||0);
 }
-function saveBookedSlot(dateValue,time){
-  if(!dateValue||!time)return;
+function normalizeBookingEntry(entry){
+  if(typeof entry==='object' && entry!==null){
+    return {time:entry.time||entry.tijdslot||entry.start, duration:Number(entry.duration||entry.duur||entry.minutes||45)};
+  }
+  const raw=String(entry||'');
+  if(raw.includes('|')){
+    const [time,duration]=raw.split('|');
+    return {time, duration:Number(duration)||45};
+  }
+  return {time:raw, duration:45};
+}
+function bookedIntervals(dateValue){
   const booked=getBookedSlots();
-  if(!Array.isArray(booked[dateValue])) booked[dateValue]=[];
-  if(!booked[dateValue].includes(time)) booked[dateValue].push(time);
-  localStorage.setItem(BOOKED_SLOTS_KEY,JSON.stringify(booked));
+  return (Array.isArray(booked[dateValue])?booked[dateValue]:[])
+    .map(normalizeBookingEntry)
+    .filter(b=>b.time)
+    .map(b=>({start:timeToMinutes(b.time), end:timeToMinutes(b.time)+(Number(b.duration)||45)}));
+}
+function overlaps(aStart,aEnd,bStart,bEnd){
+  return aStart < bEnd && aEnd > bStart;
+}
+function isSlotAvailable(dateValue,time,duration){
+  const start=timeToMinutes(time);
+  const end=start+(Number(duration)||getServiceDuration(document.getElementById('service')?.value||''));
+  return !bookedIntervals(dateValue).some(b=>overlaps(start,end,b.start,b.end));
+}
+function isBookedSlot(dateValue,time,duration){
+  return !isSlotAvailable(dateValue,time,duration);
+}
+function saveBookedSlot(dateValue,time,duration){
+  if(!dateValue||!time)return;
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem(BOOKED_SLOTS_KEY))||{};}
+  catch(e){saved={};}
+  if(!Array.isArray(saved[dateValue])) saved[dateValue]=[];
+  const entry=time+'|'+(Number(duration)||45);
+  if(!saved[dateValue].includes(entry)) saved[dateValue].push(entry);
+  localStorage.setItem(BOOKED_SLOTS_KEY,JSON.stringify(saved));
 }
 function renderTimeSlots(dateValue,dayIndex){
   const container=document.getElementById('time-options');
   document.getElementById('time').value='';
   container.innerHTML='';
-  const availableSlots=getSlots(dayIndex).filter(t=>!isBookedSlot(dateValue,t));
+  const currentService=document.getElementById('service').value;
+  const currentDuration=getServiceDuration(currentService);
+  const availableSlots=getSlots(dayIndex).filter(t=>isSlotAvailable(dateValue,t,currentDuration));
   if(!availableSlots.length){
     container.innerHTML="<span style=\"font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;color:rgba(240,236,228,.25);\">Geen tijden meer beschikbaar op deze dag</span>";
     return;
@@ -545,7 +579,7 @@ function renderTimeSlots(dateValue,dayIndex){
     const b=document.createElement('button');
     b.type='button';b.className='time-btn';b.textContent=t;
     b.onclick=()=>{
-      if(isBookedSlot(dateValue,t)){
+      if(!isSlotAvailable(dateValue,t,currentDuration)){
         showAlert('Dit tijdslot is al geboekt. Kies een andere tijd.','err');
         renderTimeSlots(dateValue,dayIndex);
         return;
@@ -596,6 +630,14 @@ document.getElementById('date').addEventListener('change',async function(){
   try{await loadOnlineBookedSlots(this.value);}catch(err){console.error(err);}
   renderTimeSlots(this.value,idx);
 });
+
+
+function refreshTimeSlotsForService(){
+  if(window._selectedDateValue){
+    const dt=new Date(window._selectedDateValue);
+    if(!isNaN(dt)) renderTimeSlots(window._selectedDateValue,dt.getDay());
+  }
+}
 
 function getServicePrice(service){
   return service==='Knippen met baard'?12.5:10;
@@ -672,7 +714,7 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
   if(!window._dateLabel){showAlert('Kies een geldige openingsdag.','err');return;}
   if(!time){showAlert('Selecteer een tijdslot.','err');return;}
   if(!service){showAlert('Kies een dienst.','err');return;}
-  if(isBookedSlot(window._selectedDateValue,time)){showAlert('Dit tijdslot is net geboekt. Kies een andere tijd.','err');renderTimeSlots(window._selectedDateValue,new Date(window._selectedDateValue).getDay());return;}
+  if(!isSlotAvailable(window._selectedDateValue,time,duration)){showAlert('Dit tijdslot overlapt met een andere afspraak. Kies een andere tijd.','err');renderTimeSlots(window._selectedDateValue,new Date(window._selectedDateValue).getDay());return;}
 
   btn.disabled=true;btn.textContent='Bezig met verzenden...';showAlert('','');
 
@@ -734,7 +776,7 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
     document.getElementById('mPrice').innerHTML='Totaal: '+totalStr;
     document.getElementById('mTikkie').style.display='none';
     setupCalendarEvent(window._selectedDateValue,time,service,name);
-    saveBookedSlot(window._selectedDateValue,time);
+    saveBookedSlot(window._selectedDateValue,time,duration);
     document.getElementById('modalOverlay').classList.add('on');
 
     this.reset();updatePrice();
