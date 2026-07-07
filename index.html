@@ -1,561 +1,304 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Appiecutzz Barber</title>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-:root{--navy:#0d1b2e;--mid:#122040;--gold:#c8a84b;--white:#f0ece4;--cream:#d9d0bc;--bad:#ff4d78}
-body{background:var(--navy);color:var(--white);font-family:Georgia,serif}
-nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:18px 36px;background:rgba(13,27,46,.96);border-bottom:1px solid rgba(200,168,75,.3)}
-nav a{color:var(--cream);text-decoration:none;text-transform:uppercase;letter-spacing:.15em;font-size:12px}
-.logo{color:var(--gold);font-size:22px;text-transform:none;font-weight:700}
-.links{display:flex;gap:26px}
-section{padding:80px 24px}
-.inner{max-width:1100px;margin:auto}
-.hero{min-height:100vh;display:grid;place-items:center;text-align:center;padding-top:120px}
-.badge,.label{color:var(--gold);text-transform:uppercase;letter-spacing:.22em;font-size:12px;font-weight:700}
-h1{font-size:clamp(54px,10vw,105px);line-height:1;margin:12px 0}
-h1 span{color:var(--gold)}
-h2{font-size:clamp(34px,5vw,54px);margin:10px 0 28px}
-p{color:var(--cream);line-height:1.7}
-.lead{font-size:20px;max-width:560px;margin:0 auto 30px;font-style:italic}
-.btn,.submit{background:var(--gold);color:var(--navy);border:0;padding:15px 24px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;text-decoration:none;cursor:pointer}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:rgba(200,168,75,.25);border:1px solid rgba(200,168,75,.25)}
-.card{background:var(--mid);padding:30px}
-.card h3{text-transform:uppercase;letter-spacing:.12em;font-size:15px;margin-bottom:12px}
-.price{color:var(--gold);font-size:32px;margin-top:16px;font-weight:700}
-#services,#hours{background:var(--mid)}
-.location{display:grid;grid-template-columns:1fr 1.4fr;gap:30px;border-top:1px solid rgba(200,168,75,.25);border-bottom:1px solid rgba(200,168,75,.25);padding:32px 0}
-.location-title{font-size:42px;font-weight:700}
-.location a{color:var(--gold)}
-.booking{display:grid;grid-template-columns:.85fr 1.15fr;gap:44px;align-items:start}
-.rules{list-style:none;margin-top:20px}
-.rules li{padding:11px 0;border-bottom:1px solid rgba(200,168,75,.14);color:var(--cream);text-transform:uppercase;letter-spacing:.08em;font-size:13px}
-.rules li:before{content:"◆";color:var(--gold);font-size:10px;margin-right:8px}
-form{display:flex;flex-direction:column;gap:14px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-label{display:block;color:var(--gold);font-size:12px;text-transform:uppercase;letter-spacing:.14em;font-weight:700}
-input,select{width:100%;margin-top:7px;background:var(--mid);border:1px solid rgba(200,168,75,.3);color:var(--white);font-size:16px;padding:13px;outline:none}
-input[type=date]{color-scheme:dark}
-#time-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.time-btn{background:var(--mid);border:1px solid rgba(200,168,75,.35);color:var(--cream);padding:9px 13px;cursor:pointer}
-.time-btn:hover,.time-btn.selected{background:var(--gold);color:var(--navy)}
-.hint{color:rgba(240,236,228,.45);font-size:13px;letter-spacing:.08em}
-.error{display:none;color:var(--bad);font-size:13px;margin-top:8px}
-.error.show{display:block}
-.check{display:flex;align-items:center;gap:10px;color:var(--cream);text-transform:none;letter-spacing:0;font-size:16px}
-.check input{width:18px;height:18px;margin:0}
-.total{display:flex;justify-content:space-between;align-items:center;background:var(--mid);border:1px solid rgba(200,168,75,.3);padding:16px}
-.total strong{color:var(--gold);font-size:30px}
-.alert{display:none;padding:12px}
-.alert.err{display:block;color:var(--bad);background:rgba(180,40,60,.16);border:1px solid rgba(255,77,120,.25)}
-.submit{width:100%}
-.submit:disabled{opacity:.55}
-.modal-overlay{display:none;position:fixed;inset:0;z-index:20;background:rgba(5,12,24,.88);align-items:center;justify-content:center;padding:20px}
-.modal-overlay.on{display:flex}
-.modal{max-width:460px;background:var(--mid);border:1px solid var(--gold);padding:34px;text-align:center}
-.modal h3{color:var(--gold);font-size:28px;margin-bottom:12px}
-.calendar-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0}
-.cal-btn{background:transparent;border:1px solid rgba(200,168,75,.5);color:var(--gold);padding:10px 12px;text-decoration:none;cursor:pointer}
-footer{text-align:center;padding:30px;color:rgba(240,236,228,.45);border-top:1px solid rgba(200,168,75,.2)}
-@media(max-width:800px){.links{display:none}.booking,.row,.location{grid-template-columns:1fr}nav{padding:14px 18px}}
-</style>
-</head>
-<body>
-
-<nav>
-  <a href="#" class="logo">Appiecutzz</a>
-  <div class="links">
-    <a href="#services">Diensten</a>
-    <a href="#location">Locatie</a>
-    <a href="#hours">Tijden</a>
-    <a href="#booking">Boeken</a>
-  </div>
-</nav>
-
-<section class="hero">
-  <div>
-    <div class="badge">Professionele Barber</div>
-    <h1>Appie<span>cutzz</span></h1>
-    <p class="lead">Strak, scherp en verzorgd. Boek makkelijk je afspraak en kies direct je tijdslot.</p>
-    <a class="btn" href="#booking">Afspraak maken</a>
-  </div>
-</section>
-
-<section id="services">
-  <div class="inner">
-    <div class="label">Diensten</div>
-    <h2>Wat je kunt boeken</h2>
-    <div class="grid">
-      <div class="card"><h3>Knippen</h3><p>Een nette frisse cut met aandacht voor detail.</p><div class="price">&euro;10</div></div>
-      <div class="card"><h3>Knippen met baard</h3><p>Knippen met baard netjes meegenomen.</p><div class="price">&euro;12,50</div></div>
-      <div class="card"><h3>Drankje</h3><p>Fris drankje erbij tijdens je afspraak.</p><div class="price">&euro;1,50</div></div>
-    </div>
-  </div>
-</section>
-
-<section id="location">
-  <div class="inner">
-    <div class="label">Locatie</div>
-    <h2>Waar moet je zijn</h2>
-    <div class="location">
-      <div class="location-title">Locatie op aanvraag</div>
-      <div>
-        <p><strong>Stuur bericht voor de locatie.</strong></p>
-        <p style="margin-top:12px"><a href="https://wa.me/31642376172" target="_blank" rel="noopener">+31 6 42376172</a></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="hours">
-  <div class="inner">
-    <div class="label">Openingstijden</div>
-    <h2>Wanneer ik open ben</h2>
-    <div class="grid">
-      <div class="card"><h3>Maandag</h3><p>15:30 - 18:30</p></div>
-      <div class="card"><h3>Dinsdag</h3><p>15:30 - 20:00</p></div>
-      <div class="card"><h3>Woensdag</h3><p>15:30 - 18:30</p></div>
-      <div class="card"><h3>Donderdag</h3><p>15:30 - 20:00</p></div>
-      <div class="card"><h3>Vrijdag</h3><p>16:45 - 20:00</p></div>
-      <div class="card"><h3>Weekend</h3><p>Gesloten</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="booking">
-  <div class="inner booking">
-    <div>
-      <div class="label">Boeken</div>
-      <h2>Maak een afspraak</h2>
-      <ul class="rules">
-        <li>Knippen: &euro;10</li>
-        <li>Knippen met baard: &euro;12,50</li>
-        <li>Drankje erbij: &euro;1,50</li>
-        <li>Betalen via Tikkie: &euro;15</li>
-        <li>Van 29 juni t/m 3 juli gesloten door leren</li>
-      </ul>
-    </div>
-
-    <form id="bookingForm">
-      <div class="row">
-        <div><label for="name">Voornaam</label><input id="name" type="text" placeholder="Jouw naam" required></div>
-        <div><label for="phone">Telefoon</label><input id="phone" type="tel" placeholder="06-12345678" required></div>
-      </div>
-
-      <div><label for="email">E-mailadres</label><input id="email" type="email" placeholder="jij@email.com" required></div>
-
-      <div>
-        <label for="date">Datum</label>
-        <input id="date" type="date" required>
-        <div id="dateErr" class="error">Deze dag is gesloten.</div>
-      </div>
-
-      <div>
-        <label>Tijdslot</label>
-        <div id="time-options"><span class="hint">Kies eerst een datum hierboven</span></div>
-        <input id="time" type="hidden" required>
-      </div>
-
-      <div>
-        <label for="service">Dienst</label>
-        <select id="service" required>
-          <option value="">Kies een dienst</option>
-          <option value="Knippen">Knippen - &euro;10</option>
-          <option value="Knippen met baard">Knippen met baard - &euro;12,50</option>
-        </select>
-      </div>
-
-      <label class="check"><input id="drink" type="checkbox"> Drankje erbij - &euro;1,50</label>
-
-      <div class="total"><span>Totaal</span><strong id="priceTotal">&euro;10,00</strong></div>
-      <div id="formAlert" class="alert"></div>
-      <button id="submitBtn" class="submit" type="submit">Bevestig afspraak</button>
-    </form>
-  </div>
-</section>
-
-<footer>Appiecutzz - alle rechten voorbehouden</footer>
-
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <h3>Afspraak bevestigd</h3>
-    <p id="mName"></p>
-    <p id="mDetails"></p>
-    <p id="mPrice"></p>
-    <div class="calendar-actions">
-      <a id="googleCalendarLink" class="cal-btn" href="#" target="_blank" rel="noopener">Google Agenda</a>
-      <button class="cal-btn" type="button" onclick="downloadCalendarEvent()">Agenda bestand</button>
-    </div>
-    <button class="btn" type="button" onclick="closeModal()">Sluiten</button>
-  </div>
-</div>
-
 <script>
-const EMAILJS_PUBLIC_KEY="Y5ZRYgbti5gohuVmx";
-const EMAILJS_SERVICE="service_wo5zzw1";
-const EMAILJS_TEMPLATE="template_x8i5nwh";
-const BOOKING_API_URL="https://script.google.com/macros/s/AKfycbyaiWGas5YqLt3vGpcJ-b6-w933xYxU0nOX5B9SAADU2qrFSYV4NZ6IRqSfiCDBkFlq/exec";
+const EMAILJS_PUBLIC_KEY = "Y5ZRYgbti5gohuVmx";
+const EMAILJS_SERVICE = "service_wo5zzw1";
+const EMAILJS_TEMPLATE = "template_x8i5nwh";
+const BOOKING_API_URL = "https://script.google.com/macros/s/AKfycbyaiWGas5YqLt3vGpcJ-b6-w933xYxU0nOX5B9SAADU2qrFSYV4NZ6IRqSfiCDBkFlq/exec";
 
-const EMAILJS_AVAILABLE=typeof window.emailjs!=="undefined";
-if(EMAILJS_AVAILABLE){emailjs.init({publicKey:EMAILJS_PUBLIC_KEY});}
-
-const schedule={
-  1:{s:[15,30],e:[18,30]},
-  2:{s:[15,30],e:[20,0]},
-  3:{s:[15,30],e:[18,30]},
-  4:{s:[15,30],e:[20,0]},
-  5:{s:[16,45],e:[20,0]}
-};
-
-const NL_DAYS=["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"];
-const MONTHS=["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
-
-const CLOSED_DATE_RANGES=[
-  {start:"2026-06-18",end:"2026-06-26",message:"Ik knip niet van 18 juni t/m 26 juni."},
-  {start:"2026-06-29",end:"2026-07-03",message:"Ik knip niet van 29 juni t/m 3 juli omdat ik moet leren. Daarna ben ik weer beschikbaar."}
-];
-
-const FIXED_BOOKED_SLOTS={
-  "2026-06-08":["15:30","16:15","17:00"],
-  "2026-06-10":["15:30"],
-  "2026-06-11":["19:00"]
-};
-
-const REMOTE_BOOKED_SLOTS={};
-
-function getClosedRange(dateValue){
-  return CLOSED_DATE_RANGES.find(range=>dateValue>=range.start&&dateValue<=range.end);
+const EMAILJS_AVAILABLE = typeof window.emailjs !== "undefined";
+if (EMAILJS_AVAILABLE) {
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 }
 
-function getSlots(dayIndex){
-  const s=schedule[dayIndex];
-  if(!s)return[];
-  let out=[],h=s.s[0],m=s.s[1];
-  while(h*60+m+45<=s.e[0]*60+s.e[1]){
-    out.push(String(h).padStart(2,"0")+":"+String(m).padStart(2,"0"));
-    m+=45;
-    if(m>=60){h++;m-=60;}
+const serviceSelect = document.getElementById("service");
+if (serviceSelect) {
+  serviceSelect.innerHTML =
+    '<option value="">&#8212; Kies een dienst &#8212;</option>' +
+    '<option value="Knippen met bovenkant">Knippen met bovenkant - &euro;10</option>' +
+    '<option value="Knippen met baard">Knippen met baard - &euro;12,50</option>';
+}
+
+const cur = document.getElementById("cur");
+const ring = document.getElementById("ring");
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+if (cur && ring) {
+  document.addEventListener("mousemove", e => {
+    mx = e.clientX;
+    my = e.clientY;
+  });
+
+  (function animateCursor() {
+    cur.style.left = mx + "px";
+    cur.style.top = my + "px";
+    rx += (mx - rx) * .14;
+    ry += (my - ry) * .14;
+    ring.style.left = rx + "px";
+    ring.style.top = ry + "px";
+    requestAnimationFrame(animateCursor);
+  })();
+}
+
+const schedule = {
+  0: { s: [12, 30], e: [16, 0] },
+  1: { s: [12, 30], e: [16, 0] },
+  2: { s: [12, 30], e: [16, 0] },
+  3: { s: [12, 30], e: [16, 0] },
+  4: { s: [12, 30], e: [16, 0] },
+  5: { s: [12, 30], e: [16, 0] },
+  6: { s: [12, 30], e: [16, 0] }
+};
+
+const NL_DAYS = ["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"];
+const MONTHS = ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
+
+const CLOSED_DATE_RANGES = [
+  {
+    start: "2026-07-15",
+    end: "2026-07-22",
+    message: "Ik ben van 15 juli t/m 22 juli op vakantie. In deze periode kun je geen afspraak maken."
   }
+];
+
+function getClosedRange(dateValue) {
+  return CLOSED_DATE_RANGES.find(range => dateValue >= range.start && dateValue <= range.end);
+}
+
+function getServiceDuration(service) {
+  if (service === "Knippen met baard") return 45;
+  return 35;
+}
+
+function getServicePrice(service) {
+  return service === "Knippen met baard" ? 12.5 : 10;
+}
+
+function getSlots(dayIndex) {
+  const day = schedule[dayIndex];
+  if (!day) return [];
+
+  const service = document.getElementById("service")?.value || "Knippen met bovenkant";
+  const duration = getServiceDuration(service);
+
+  let out = [];
+  let h = day.s[0];
+  let m = day.s[1];
+
+  while (h * 60 + m + duration <= day.e[0] * 60 + day.e[1]) {
+    out.push(String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0"));
+    m += duration;
+
+    if (m >= 60) {
+      h += Math.floor(m / 60);
+      m = m % 60;
+    }
+  }
+
   return out;
 }
 
-function bookingApiRequest(action,params){
-  return new Promise((resolve,reject)=>{
-    const callback="appiecutzzCallback"+Date.now()+Math.floor(Math.random()*1000);
-    const script=document.createElement("script");
-    const data=new URLSearchParams({action,callback,...params});
+const BOOKED_SLOTS_KEY = "appiecutzz_booked_slots_v1";
+const FIXED_BOOKED_SLOTS = {};
+const REMOTE_BOOKED_SLOTS = {};
 
-    window[callback]=response=>{
-      resolve(response||{});
+function bookingApiConfigured() {
+  return BOOKING_API_URL && !BOOKING_API_URL.includes("PASTE_GOOGLE_APPS_SCRIPT");
+}
+
+function bookingApiRequest(action, params) {
+  if (!bookingApiConfigured()) {
+    return Promise.resolve({ ok: true, local: true, booked: [] });
+  }
+
+  return new Promise((resolve, reject) => {
+    const callback = "appiecutzzCallback" + Date.now() + Math.floor(Math.random() * 1000);
+    const script = document.createElement("script");
+    const data = new URLSearchParams({ action, callback, ...params });
+
+    window[callback] = response => {
+      resolve(response || {});
       script.remove();
       delete window[callback];
     };
 
-    script.onerror=()=>{
+    script.onerror = () => {
       reject(new Error("Booking API niet bereikbaar"));
       script.remove();
       delete window[callback];
     };
 
-    script.src=BOOKING_API_URL+"?"+data.toString();
+    script.src = BOOKING_API_URL + "?" + data.toString();
     document.body.appendChild(script);
   });
 }
 
-async function loadOnlineBookedSlots(dateValue){
-  if(!dateValue)return;
-  const data=await bookingApiRequest("list",{date:dateValue});
-  REMOTE_BOOKED_SLOTS[dateValue]=Array.isArray(data.booked)?data.booked:[];
+async function loadOnlineBookedSlots(dateValue) {
+  if (!dateValue || !bookingApiConfigured()) return;
+
+  const data = await bookingApiRequest("list", { date: dateValue });
+  REMOTE_BOOKED_SLOTS[dateValue] = Array.isArray(data.booked) ? data.booked : [];
 }
 
-async function bookOnlineSlot(payload){
-  return bookingApiRequest("book",payload);
+async function bookOnlineSlot(payload) {
+  if (!bookingApiConfigured()) return { ok: true, local: true };
+  return bookingApiRequest("book", payload);
 }
 
-function getBookedSlots(){
-  let saved={};
-  try{saved=JSON.parse(localStorage.getItem("appiecutzz_booked_slots_v1"))||{};}
-  catch(e){saved={};}
+function getBookedSlots() {
+  let saved = {};
 
-  const booked={...FIXED_BOOKED_SLOTS};
+  try {
+    saved = JSON.parse(localStorage.getItem(BOOKED_SLOTS_KEY)) || {};
+  } catch (e) {
+    saved = {};
+  }
 
-  [saved,REMOTE_BOOKED_SLOTS].forEach(source=>{
-    Object.keys(source).forEach(date=>{
-      const current=booked[date]||[];
-      const extra=Array.isArray(source[date])?source[date]:[];
-      booked[date]=Array.from(new Set([...current,...extra]));
+  const booked = { ...FIXED_BOOKED_SLOTS };
+
+  [saved, REMOTE_BOOKED_SLOTS].forEach(source => {
+    Object.keys(source).forEach(date => {
+      const current = booked[date] || [];
+      const extra = Array.isArray(source[date]) ? source[date] : [];
+      booked[date] = Array.from(new Set([...current, ...extra]));
     });
   });
 
   return booked;
 }
 
-function isBookedSlot(dateValue,time){
-  const booked=getBookedSlots();
-  return Array.isArray(booked[dateValue])&&booked[dateValue].includes(time);
+function isBookedSlot(dateValue, time) {
+  const booked = getBookedSlots();
+  return Array.isArray(booked[dateValue]) && booked[dateValue].includes(time);
 }
 
-function saveBookedSlot(dateValue,time){
-  let saved={};
-  try{saved=JSON.parse(localStorage.getItem("appiecutzz_booked_slots_v1"))||{};}
-  catch(e){saved={};}
+function saveBookedSlot(dateValue, time) {
+  if (!dateValue || !time) return;
 
-  if(!saved[dateValue])saved[dateValue]=[];
-  if(!saved[dateValue].includes(time))saved[dateValue].push(time);
+  let saved = {};
 
-  localStorage.setItem("appiecutzz_booked_slots_v1",JSON.stringify(saved));
+  try {
+    saved = JSON.parse(localStorage.getItem(BOOKED_SLOTS_KEY)) || {};
+  } catch (e) {
+    saved = {};
+  }
+
+  if (!Array.isArray(saved[dateValue])) saved[dateValue] = [];
+  if (!saved[dateValue].includes(time)) saved[dateValue].push(time);
+
+  localStorage.setItem(BOOKED_SLOTS_KEY, JSON.stringify(saved));
 }
 
-function renderTimeSlots(dateValue,dayIndex){
-  const container=document.getElementById("time-options");
-  document.getElementById("time").value="";
-  container.innerHTML="";
+function renderTimeSlots(dateValue, dayIndex) {
+  const container = document.getElementById("time-options");
+  document.getElementById("time").value = "";
+  container.innerHTML = "";
 
-  const slots=getSlots(dayIndex).filter(t=>!isBookedSlot(dateValue,t));
+  const availableSlots = getSlots(dayIndex).filter(t => !isBookedSlot(dateValue, t));
 
-  if(!slots.length){
-    container.innerHTML='<span class="hint">Geen tijden meer beschikbaar op deze dag</span>';
+  if (!availableSlots.length) {
+    container.innerHTML =
+      "<span style=\"font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;color:rgba(240,236,228,.25);\">Geen tijden meer beschikbaar op deze dag</span>";
     return;
   }
 
-  slots.forEach(t=>{
-    const b=document.createElement("button");
-    b.type="button";
-    b.className="time-btn";
-    b.textContent=t;
+  availableSlots.forEach(t => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "time-btn";
+    button.textContent = t;
 
-    b.onclick=()=>{
-      if(isBookedSlot(dateValue,t)){
-        showAlert("Dit tijdslot is al geboekt. Kies een andere tijd.","err");
-        renderTimeSlots(dateValue,dayIndex);
+    button.onclick = () => {
+      if (isBookedSlot(dateValue, t)) {
+        showAlert("Dit tijdslot is al geboekt. Kies een andere tijd.", "err");
+        renderTimeSlots(dateValue, dayIndex);
         return;
       }
 
-      document.querySelectorAll(".time-btn").forEach(x=>x.classList.remove("selected"));
-      b.classList.add("selected");
-      document.getElementById("time").value=t;
+      document.querySelectorAll(".time-btn").forEach(x => x.classList.remove("selected"));
+      button.classList.add("selected");
+      document.getElementById("time").value = t;
     };
 
-    container.appendChild(b);
+    container.appendChild(button);
   });
 }
 
-function getServicePrice(service){
-  return service==="Knippen met baard"?12.5:10;
-}
+const today = new Date();
+document.getElementById("date").min =
+  today.getFullYear() + "-" +
+  String(today.getMonth() + 1).padStart(2, "0") + "-" +
+  String(today.getDate()).padStart(2, "0");
 
-function updatePrice(){
-  const service=document.getElementById("service").value;
-  const hasDrink=document.getElementById("drink").checked;
-  let total=getServicePrice(service);
+document.getElementById("date").addEventListener("change", async function () {
+  const [y, mo, d] = this.value.split("-").map(Number);
+  const date = new Date(y, mo - 1, d);
+  const dayIndex = date.getDay();
+  const container = document.getElementById("time-options");
+  const err = document.getElementById("dateErr");
 
-  if(hasDrink)total+=1.5;
+  document.getElementById("time").value = "";
+  window._selectedDateValue = this.value;
 
-  document.getElementById("priceTotal").innerHTML="&euro;"+total.toFixed(2).replace(".",",");
-}
+  const closedRange = getClosedRange(this.value);
 
-function showAlert(msg,type){
-  const el=document.getElementById("formAlert");
-  el.innerHTML=msg;
-  el.className="alert"+(type?" "+type:"");
-}
-
-function calendarDateTime(dateValue,time,addMinutes){
-  const d=dateValue.split("-").map(Number);
-  const hm=time.split(":").map(Number);
-  return new Date(d[0],d[1]-1,d[2],hm[0],hm[1]+(addMinutes||0),0);
-}
-
-function toCalendarDate(dt){
-  return dt.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
-}
-
-function escapeIcs(text){
-  return String(text).replace(/\\/g,"\\\\").replace(/,/g,"\\,").replace(/;/g,"\\;").replace(/\n/g,"\\n");
-}
-
-function setupCalendarEvent(dateValue,time,service,name){
-  const start=calendarDateTime(dateValue,time,0);
-  const end=calendarDateTime(dateValue,time,45);
-  const title="Appiecutzz - "+service;
-  const details="Afspraak bij Appiecutzz voor "+name+". Kom op tijd.";
-
-  document.getElementById("googleCalendarLink").href=
-    "https://calendar.google.com/calendar/render?action=TEMPLATE"+
-    "&text="+encodeURIComponent(title)+
-    "&dates="+toCalendarDate(start)+"/"+toCalendarDate(end)+
-    "&details="+encodeURIComponent(details);
-
-  window._calendarIcs=
-    "BEGIN:VCALENDAR\r\n"+
-    "VERSION:2.0\r\n"+
-    "PRODID:-//Appiecutzz//Booking//NL\r\n"+
-    "BEGIN:VEVENT\r\n"+
-    "UID:"+Date.now()+"@appiecutzz\r\n"+
-    "DTSTAMP:"+toCalendarDate(new Date())+"\r\n"+
-    "DTSTART:"+toCalendarDate(start)+"\r\n"+
-    "DTEND:"+toCalendarDate(end)+"\r\n"+
-    "SUMMARY:"+escapeIcs(title)+"\r\n"+
-    "DESCRIPTION:"+escapeIcs(details)+"\r\n"+
-    "END:VEVENT\r\n"+
-    "END:VCALENDAR\r\n";
-}
-
-function downloadCalendarEvent(){
-  if(!window._calendarIcs)return;
-
-  const blob=new Blob([window._calendarIcs],{type:"text/calendar;charset=utf-8"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-
-  a.href=url;
-  a.download="appiecutzz-afspraak.ics";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-
-  URL.revokeObjectURL(url);
-}
-
-function closeModal(){
-  document.getElementById("modalOverlay").classList.remove("on");
-}
-
-const today=new Date();
-document.getElementById("date").min=
-  today.getFullYear()+"-"+
-  String(today.getMonth()+1).padStart(2,"0")+"-"+
-  String(today.getDate()).padStart(2,"0");
-
-document.getElementById("service").addEventListener("change",updatePrice);
-document.getElementById("drink").addEventListener("change",updatePrice);
-
-document.getElementById("date").addEventListener("change",async function(){
-  const [y,mo,d]=this.value.split("-").map(Number);
-  const dt=new Date(y,mo-1,d);
-  const idx=dt.getDay();
-  const container=document.getElementById("time-options");
-  const err=document.getElementById("dateErr");
-  const closedRange=getClosedRange(this.value);
-
-  document.getElementById("time").value="";
-  window._selectedDateValue=this.value;
-
-  if(!schedule[idx]||closedRange){
-    err.textContent=closedRange?closedRange.message:"Deze dag is gesloten. Kies maandag t/m vrijdag.";
+  if (!schedule[dayIndex] || closedRange) {
+    err.textContent = closedRange ? closedRange.message : "Deze dag is gesloten.";
     err.classList.add("show");
-    container.innerHTML='<span class="hint">'+(closedRange?"Niet beschikbaar in deze periode":"Gesloten op deze dag")+"</span>";
-    window._dateLabel="";
-    window._selectedDateValue="";
+    container.innerHTML =
+      "<span style=\"font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;color:rgba(240,236,228,.25);\">" +
+      (closedRange ? "Niet beschikbaar in deze periode" : "Gesloten op deze dag") +
+      "</span>";
+    window._dateLabel = "";
+    window._selectedDateValue = "";
     return;
   }
 
+  err.textContent = "Deze dag is gesloten.";
   err.classList.remove("show");
 
-  const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-  window._dateLabel=cap(NL_DAYS[idx])+" "+d+" "+MONTHS[mo-1]+" "+y;
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  window._dateLabel = cap(NL_DAYS[dayIndex]) + " " + d + " " + MONTHS[mo - 1] + " " + y;
 
-  container.innerHTML='<span class="hint">Tijden laden...</span>';
+  container.innerHTML =
+    "<span style=\"font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;color:rgba(240,236,228,.25);\">Tijden laden...</span>";
 
-  try{await loadOnlineBookedSlots(this.value);}
-  catch(err){console.error(err);}
-
-  renderTimeSlots(this.value,idx);
-});
-
-document.getElementById("bookingForm").addEventListener("submit",async function(e){
-  e.preventDefault();
-
-  const name=document.getElementById("name").value.trim();
-  const phone=document.getElementById("phone").value.trim();
-  const email=document.getElementById("email").value.trim();
-  const time=document.getElementById("time").value;
-  const service=document.getElementById("service").value;
-  const hasDrink=document.getElementById("drink").checked;
-
-  let total=getServicePrice(service);
-  if(hasDrink)total+=1.5;
-
-  const totalStr="€"+total.toFixed(2).replace(".",",");
-  const btn=document.getElementById("submitBtn");
-  const extras=[];
-
-  if(hasDrink)extras.push("Drankje (+€1,50)");
-
-  if(!window._dateLabel){showAlert("Kies een geldige openingsdag.","err");return;}
-  if(!time){showAlert("Selecteer een tijdslot.","err");return;}
-  if(!service){showAlert("Kies een dienst.","err");return;}
-
-  if(isBookedSlot(window._selectedDateValue,time)){
-    showAlert("Dit tijdslot is net geboekt. Kies een andere tijd.","err");
-    renderTimeSlots(window._selectedDateValue,new Date(window._selectedDateValue).getDay());
-    return;
-  }
-
-  btn.disabled=true;
-  btn.textContent="Bezig met verzenden...";
-  showAlert("","");
-
-  try{
-    const onlineBooking=await bookOnlineSlot({
-      date:window._selectedDateValue,
-      time:time,
-      name:name,
-      phone:phone,
-      email:email,
-      service:service,
-      price:totalStr,
-      note:extras.length?extras.join(", "):"Geen extra's"
-    });
-
-    if(!onlineBooking.ok){
-      showAlert("Dit tijdslot is net geboekt of online boeken lukt nu niet. Kies een andere tijd of stuur een bericht.","err");
-      btn.disabled=false;
-      btn.textContent="Bevestig afspraak";
-      return;
-    }
-
-    if(EMAILJS_AVAILABLE){
-      await emailjs.send(EMAILJS_SERVICE,EMAILJS_TEMPLATE,{
-        klant_naam:name,
-        klant_tel:phone,
-        klant_email:email,
-        datum:window._dateLabel,
-        tijdslot:time,
-        dienst:service,
-        prijs:totalStr,
-        opmerking:extras.length?extras.join(", "):"Geen extra's"
-      });
-    }
-
-    saveBookedSlot(window._selectedDateValue,time);
-    setupCalendarEvent(window._selectedDateValue,time,service,name);
-
-    document.getElementById("mName").textContent="Hey "+name;
-    document.getElementById("mDetails").textContent=window._dateLabel+" om "+time+" - "+service;
-    document.getElementById("mPrice").textContent="Totaal: "+totalStr;
-    document.getElementById("modalOverlay").classList.add("on");
-
-    this.reset();
-    updatePrice();
-
-    document.getElementById("time-options").innerHTML='<span class="hint">Kies eerst een datum hierboven</span>';
-    window._dateLabel="";
-    window._selectedDateValue="";
-  }catch(err){
+  try {
+    await loadOnlineBookedSlots(this.value);
+  } catch (err) {
     console.error(err);
-    showAlert("Verzenden mislukt. Probeer opnieuw of stuur een bericht.","err");
   }
 
-  btn.disabled=false;
-  btn.textContent="Bevestig afspraak";
+  renderTimeSlots(this.value, dayIndex);
 });
-</script>
-</body>
-</html>
 
+function refreshSlotsForSelectedService() {
+  const dateValue = document.getElementById("date").value;
+  if (!dateValue) return;
+
+  const [y, mo, d] = dateValue.split("-").map(Number);
+  const dayIndex = new Date(y, mo - 1, d).getDay();
+
+  if (schedule[dayIndex] && !getClosedRange(dateValue)) {
+    renderTimeSlots(dateValue, dayIndex);
+  }
+}
+
+document.getElementById("service").addEventListener("change", function () {
+  updatePrice();
+  refreshSlotsForSelectedService();
+});
+
+document.getElementById("drink").addEventListener("change", updatePrice);
+
+function updatePrice() {
+  const service = document.getElementById("service").value;
+  const hasDrink = document.getElementById("drink").checked;
+
+  let total = getServicePrice(service);
+  if (hasDrink && !document.getElementById("drink").disabled) total += 1.5;
+
+  document.getElementById("priceTotal").innerHTML = "&#8364;" + total.toFixed(2).replace(".", ",");
+}
+
+function calendarDateTime(dateValue, time, addMinutes) {
+  const parts = dateValue.split("-").map(Number);
+  const hm = tim
