@@ -460,10 +460,13 @@ function getSlots(d){
   const s=schedule[d];if(!s)return[];
   const service=document.getElementById('service')?document.getElementById('service').value:'';
   const duration=getServiceDuration(service);
-  let out=[],h=s.s[0],m=s.s[1];
-  while(h*60+m+duration<=s.e[0]*60+s.e[1]){
+  const startMin=s.s[0]*60+s.s[1];
+  const endMin=s.e[0]*60+s.e[1];
+  const step=15; // elke 15 minuten tonen, maar overlappende tijden worden weggefilterd
+  const out=[];
+  for(let min=startMin; min+duration<=endMin; min+=step){
+    const h=Math.floor(min/60), m=min%60;
     out.push(String(h).padStart(2,'0')+':'+String(m).padStart(2,'0'));
-    m+=duration;if(m>=60){h+=Math.floor(m/60);m=m%60;}
   }
   return out;
 }
@@ -525,9 +528,24 @@ function timeToMinutes(time){
   const parts=String(time||'').split(':').map(Number);
   return (parts[0]||0)*60+(parts[1]||0);
 }
+function minutesToTime(total){
+  const h=Math.floor(total/60), m=total%60;
+  return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+}
 function normalizeBookingEntry(entry){
   if(typeof entry==='object' && entry!==null){
-    return {time:entry.time||entry.tijdslot||entry.start, duration:Number(entry.duration||entry.duur||entry.minutes||45)};
+    const start=entry.time||entry.tijdslot||entry.start||entry.start_time;
+    let duration=Number(entry.duration||entry.minutes||0);
+    if(!duration && entry.duur){
+      const match=String(entry.duur).match(/\d+/);
+      duration=match?Number(match[0]):0;
+    }
+    if(!duration && entry.end_time && start){
+      duration=timeToMinutes(entry.end_time)-timeToMinutes(start);
+    }
+    if(!duration && String(entry.service||entry.dienst||'').toLowerCase().includes('baard')) duration=45;
+    if(!duration) duration=45;
+    return {time:start, duration:duration};
   }
   const raw=String(entry||'');
   if(raw.includes('|')){
@@ -714,9 +732,16 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
   if(!window._dateLabel){showAlert('Kies een geldige openingsdag.','err');return;}
   if(!time){showAlert('Selecteer een tijdslot.','err');return;}
   if(!service){showAlert('Kies een dienst.','err');return;}
-  if(!isSlotAvailable(window._selectedDateValue,time,duration)){showAlert('Dit tijdslot overlapt met een andere afspraak. Kies een andere tijd.','err');renderTimeSlots(window._selectedDateValue,new Date(window._selectedDateValue).getDay());return;}
 
-  btn.disabled=true;btn.textContent='Bezig met verzenden...';showAlert('','');
+  btn.disabled=true;btn.textContent='Beschikbaarheid checken...';showAlert('','');
+  try{await loadOnlineBookedSlots(window._selectedDateValue);}catch(err){console.error(err);}
+  if(!isSlotAvailable(window._selectedDateValue,time,duration)){
+    showAlert('Dit tijdslot overlapt met een andere afspraak. Kies een andere tijd.','err');
+    renderTimeSlots(window._selectedDateValue,new Date(window._selectedDateValue).getDay());
+    btn.disabled=false;btn.innerHTML='Bevestig Afspraak &nbsp; &#10022;';
+    return;
+  }
+  btn.textContent='Bezig met verzenden...';
 
   if(!EMAILJS_AVAILABLE){
     showAlert('Mailservice niet geladen. Check je internetverbinding en probeer opnieuw.','err');
@@ -736,7 +761,10 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
       email:email,
       service:service,
       price:totalStr,
+      duration:duration,
+      minutes:duration,
       duur:duration+' minuten',
+      end_time:minutesToTime(timeToMinutes(time)+duration),
       note:extras.length?extras.join(', '):"Geen extra's"
     });
     if(!onlineBooking.ok){
