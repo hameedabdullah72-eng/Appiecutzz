@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Appiecutzz â€” Premium Barber</title>
+<title>Appiecutzz website</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
@@ -267,10 +267,9 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
     <div class="sec-badge">&#9670; &nbsp; Wat ik aanbied</div>
     <h2>Diensten</h2>
     <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
-    <p style="font-style:italic;color:var(--cream);opacity:.55;max-width:500px;">Knippen met bovenkant is &euro;10 en duurt 35 minuten. Knippen met baard is &euro;12,50 en duurt 45 minuten. Weekend is alleen op aanvraag en kost &euro;15. Drankje erbij is &euro;1,50.</p>
+    <p style="font-style:italic;color:var(--cream);opacity:.55;max-width:500px;">Knippen is &euro;10 en duurt 45 minuten. Weekend is alleen op aanvraag en kost &euro;15. Drankje erbij is &euro;1,50.</p>
     <div class="services-grid">
-      <div class="svc"><span class="svc-icon">&#9986;&#65039;</span><div class="svc-name">Knippen met bovenkant</div><p class="svc-desc">Jouw haar netjes geknipt en de bovenkant strak afgewerkt. Duur: 35 minuten.</p><div class="svc-price">&euro;10</div><div class="svc-sub">35 min</div></div>
-      <div class="svc"><span class="svc-icon">&#128081;</span><div class="svc-name">Knippen met baard</div><p class="svc-desc">Haar en baard netjes strak afgewerkt in &eacute;&eacute;n afspraak. Duur: 45 minuten.</p><div class="svc-price">&euro;12,50</div><div class="svc-sub">45 min</div></div>
+      <div class="svc"><span class="svc-icon">&#9986;&#65039;</span><div class="svc-name">Knippen</div><p class="svc-desc">Jouw haar netjes geknipt en strak afgewerkt. Duur: 45 minuten.</p><div class="svc-price">&euro;10</div><div class="svc-sub">45 min</div></div>
       <div class="svc"><span class="svc-icon">&#127865;</span><div class="svc-name">Drankje</div><p class="svc-desc">Fris drankje erbij tijdens je afspraak.</p><div class="svc-price">&euro;1,50</div><div class="svc-sub">Extra optie</div></div>
     </div>
   </div>
@@ -323,8 +322,7 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
       <div class="booking-intro">
         <p>Kies je datum en tijdslot, selecteer je dienst en bevestig. Appiecutzz ontvangt je boeking direct in zijn inbox. Je kunt boeken vanaf 12:00; 17:00 zelf is niet boekbaar.</p><p><strong>Let op:</strong> zaterdag en zondag zijn alleen op aanvraag via WhatsApp en kosten &euro;15. Van 15 juli t/m 22 juli ben ik op vakantie, dus die dagen zijn gesloten.</p>
         <ul class="booking-rules">
-          <li>Knippen met bovenkant: &euro;10 &mdash; 35 min</li>
-          <li>Knippen met baard: &euro;12,50 &mdash; 45 min</li>
+          <li>Knippen: &euro;10 &mdash; 45 min</li>
           <li>Weekend: alleen op aanvraag via WhatsApp &mdash; &euro;15</li>
           <li>Drankje erbij: &euro;1,50</li>
           <li>Laatste afspraak moet vóór 17:00 klaar zijn &mdash; 17:00 zelf is niet boekbaar</li>
@@ -362,8 +360,7 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
             <label class="form-label" for="service">Dienst</label>
             <select class="form-select" id="service" onchange="updatePrice();refreshTimeSlotsForService()" required>
               <option value="">&#8212; Kies een dienst &#8212;</option>
-              <option value="Knippen met bovenkant">Knippen met bovenkant - &euro;10 - 35 min</option>
-              <option value="Knippen met baard">Knippen met baard - &euro;12,50 - 45 min</option>
+              <option value="Knippen">Knippen - &euro;10 - 45 min</option>
             </select>
           </div>
 
@@ -454,7 +451,7 @@ function weekendWhatsAppMessage(dateLabel){
 }
 
 function getServiceDuration(service){
-  return service==='Knippen met baard'?45:35;
+  return 45;
 }
 function getSlots(d){
   const s=schedule[d];if(!s)return[];
@@ -658,7 +655,7 @@ function refreshTimeSlotsForService(){
 }
 
 function getServicePrice(service){
-  return service==='Knippen met baard'?12.5:10;
+  return 10;
 }
 function updatePrice(){
   const service=document.getElementById('service').value;
