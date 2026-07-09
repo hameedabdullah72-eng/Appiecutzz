@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Appiecutzz</title>
+<title>Appiecutzz â€” Premium Barber</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
@@ -437,6 +437,12 @@ const schedule={
   5:{s:[12,0],e:[17,0]},
   6:null  // Zaterdag: alleen op aanvraag via WhatsApp, weekendprijs €15
 };
+
+const SPECIAL_HOURS={
+  '2026-07-13':{s:[12,0],e:[15,0]},
+  '2026-07-14':{s:[12,0],e:[15,0]}
+};
+
 const NL_DAYS=['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
 const MONTHS=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
 const CLOSED_DATE_RANGES=[
@@ -457,7 +463,7 @@ function getServiceDuration(service){
   return 45;
 }
 function getSlots(d){
-  const s=schedule[d];if(!s)return[];
+  let s=schedule[d];if(window._selectedDateValue&&SPECIAL_HOURS[window._selectedDateValue]) s=SPECIAL_HOURS[window._selectedDateValue];if(!s)return[];
   const service=document.getElementById('service')?document.getElementById('service').value:'';
   const duration=getServiceDuration(service);
   const startMin=s.s[0]*60+s.s[1];
