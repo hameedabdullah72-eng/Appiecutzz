@@ -817,15 +817,36 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
     saveBookedSlot(window._selectedDateValue,time,duration);
     await loadOnlineBookedSlots(window._selectedDateValue).catch(()=>{});
 
-    // Mail naar Appiecutzz + bevestigingsmail naar de klant.
-    // De klanttemplate is template_0xpi6k4.
-    const ownerMail = emailjs.send(EMAILJS_SERVICE,EMAILJS_TEMPLATE,templateParams);
-    const customerMail = emailjs.send(EMAILJS_SERVICE,EMAILJS_CUSTOMER_TEMPLATE,templateParams);
-    const mailResults = await Promise.allSettled([ownerMail, customerMail]);
-    if(mailResults[1].status==='rejected'){
-      console.error('Klantmail mislukt:', mailResults[1].reason);
-      throw new Error('Klant bevestigingsmail mislukt. Check in EmailJS of To Email {{klant_email}} of {{email}} is.');
-    }
+    // Mail naar Appiecutzz + bevestigingsmail naar de klant
+const ownerMail = emailjs.send(
+  EMAILJS_SERVICE,
+  EMAILJS_TEMPLATE,
+  templateParams
+);
+
+const customerMail = emailjs.send(
+  EMAILJS_SERVICE,
+  "template_0xpi6k4",
+  templateParams
+);
+
+const mailResults = await Promise.allSettled([
+  ownerMail,
+  customerMail
+]);
+
+// Check of mail naar Appiecutzz is gelukt
+if (mailResults[0].status === 'rejected') {
+  console.error('Mail naar Appiecutzz mislukt:', mailResults[0].reason);
+}
+
+// Check of bevestigingsmail naar klant is gelukt
+if (mailResults[1].status === 'rejected') {
+  console.error('Klantmail mislukt:', mailResults[1].reason);
+  throw new Error(
+    'De afspraak is opgeslagen, maar de bevestigingsmail naar de klant kon niet worden verzonden.'
+  );
+}
 
     document.getElementById('mName').innerHTML='Hey '+name+' &#128075;';
     document.getElementById('mDetails').innerHTML=(window._dateLabel)+' om '+time+' &#8212; '+service+' ('+duration+' min)';
