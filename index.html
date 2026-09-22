@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Appiecutzz | Premium Barber</title>
+<title>Appiecutzz | De kapper in Made</title>
 
 <meta name="description" content="Appiecutzz - Premium barber. Boek gemakkelijk online je afspraak.">
 
@@ -230,7 +230,7 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
   <div class="hero-ring" style="width:500px;height:500px;"></div>
   <div class="hero-ring" style="width:650px;height:650px;opacity:.06;"></div>
   <div class="hero-ring" style="width:820px;height:820px;opacity:.04;"></div>
-  <div class="hero-badge">Professionele Barber</div>
+  <div class="hero-badge">Barber</div>
   <div class="barber-pole">
     <div class="barber-stripe" style="top:0"></div>
     <div class="barber-stripe w" style="top:14px"></div>
@@ -239,7 +239,7 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
     <div class="barber-stripe" style="top:56px"></div>
   </div>
   <h1>APPIE<span>CUTZZ</span></h1>
-  <div class="hero-sub">&#10022; &nbsp; Premium Barbershop &nbsp; &#10022;</div>
+  <div class="hero-sub">&#10022; &nbsp; Barbershop &nbsp; &#10022;</div>
   <p class="hero-desc">Strak, scherp en verzorgd. Appiecutzz levert nette cuts met focus op detail, rust en kwaliteit.</p>
   <div class="hero-cta">
     <a href="#booking" class="btn-gold">Maak een afspraak</a>
@@ -327,11 +327,10 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
     <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
     <div class="booking-wrap">
       <div class="booking-intro">
-        <p>Kies je datum en tijdslot, selecteer je dienst en bevestig. Appiecutzz ontvangt je boeking direct in zijn inbox.</p><p><strong>Let op:</strong> zaterdag en zondag zijn alleen op aanvraag via WhatsApp en kosten &euro;15. Van 15 juli t/m 22 juli ben ik op vakantie, dus die dagen zijn gesloten.</p>
+        <p>Kies je datum en tijdslot, selecteer je dienst en bevestig. Appiecutzz ontvangt je boeking direct in zijn inbox.</p>
         <ul class="booking-rules">
           <li>Knippen: &euro;10 &mdash; 45 min</li>
           <li>Knippen met baard: &euro;12,50 &mdash; 45 min</li>
-          <li>Weekend: alleen op aanvraag via WhatsApp &mdash; &euro;15</li>
           <li>Drankje erbij: &euro;1,50</li>
           <li>Kom op tijd &mdash; &euro;5 betalen voor no show</li>
           <li>Volg @appiecutzz op TikTok</li>
@@ -377,7 +376,7 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
             <div class="extras-label">Extra opties</div>
             <div class="check-row">
               <input type="checkbox" id="drink" onchange="updatePrice()">
-              <label class="check-label" for="drink">Drankje erbij &mdash; <strong>&euro;1,50</strong></label>
+              <label class="check-label" for="drink">Drankje erbij &mdash; <strong>&euro;2</strong></label>
             </div>
 
           </div>
@@ -440,7 +439,6 @@ const schedule={
   3:{s:[15,30],e:[17,30]}, // Woensdag
   4:{s:[15,30],e:[17,30]}, // Donderdag
   5:{s:[15,30],e:[17,30]}, // Vrijdag
-  6:null  // Zaterdag: alleen op aanvraag via WhatsApp, weekendprijs €15
 };
 
 const SPECIAL_HOURS={
@@ -462,8 +460,8 @@ function getClosedRange(dateValue){
 function isWeekend(dayIndex){
   return dayIndex===0 || dayIndex===6;
 }
-function weekendWhatsAppMessage(dateLabel){
-  const msg='Salam, ik wil graag een weekend afspraak maken bij Appiecutzz op '+dateLabel+'.';
+function LocatieWhatsAppMessage(dateLabel){
+  const msg='Hallo Appiecutzz, ik wil graag de Locatie weten.'+dateLabel+'.';
   return 'https://wa.me/31642376172?text='+encodeURIComponent(msg);
 }
 
