@@ -313,8 +313,8 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
       <div class="day-card open"><div class="day-dot"></div><span class="day-name">Woensdag</span><div class="day-hrs">15:30 &ndash; 17:30</div></div>
       <div class="day-card open"><div class="day-dot"></div><span class="day-name">Donderdag</span><div class="day-hrs">15:30 &ndash; 17:30</div></div>
       <div class="day-card open"><div class="day-dot"></div><span class="day-name">Vrijdag</span><div class="day-hrs">15:30 &ndash; 17:30</div></div>
-      <div class="day-card open"><div class="day-dot"></div><span class="day-name">Zaterdag</span><div class="day-hrs"> Kijk doordeweeks graag</div></div>
-      <div class="day-card open"><div class="day-dot"></div><span class="day-name">Zondag</span><div class="day-hrs"> Kijk doordeweeks graag</div></div>
+      <div class="day-card open"><div class="day-dot"></div><span class="day-name">Zaterdag</span><div class="day-hrs"> Ik knip helaas deze dag niet. Kijk doordeweeks </div></div>
+      <div class="day-card open"><div class="day-dot"></div><span class="day-name">Zondag</span><div class="day-hrs">Ik knip helaas deze dag niet. Kijk doordeweeks</div></div>
     </div>
   </div>
 </section>
@@ -489,21 +489,31 @@ function bookingApiConfigured(){
   return BOOKING_API_URL && !BOOKING_API_URL.includes('PASTE_GOOGLE_APPS_SCRIPT');
 }
 function bookingApiRequest(action,params){
-  if(!bookingApiConfigured()) return Promise.resolve({ok:true,local:true,booked:[]});
+  if(!bookingApiConfigured()) return Promise.reject(new Error('Online agenda is niet ingesteld.'));
   return new Promise((resolve,reject)=>{
     const callback='appiecutzzCallback'+Date.now()+Math.floor(Math.random()*1000);
     const script=document.createElement('script');
     const data=new URLSearchParams({action,callback,...params});
+    let finished=false;
+    const cleanup=()=>{
+      clearTimeout(timer);
+      script.remove();
+      // Een laat antwoord mag geen fout veroorzaken.
+      window[callback]=()=>{};
+      setTimeout(()=>{delete window[callback];},60000);
+    };
+    const fail=message=>{
+      if(finished)return;
+      finished=true;cleanup();reject(new Error(message));
+    };
+    const timer=setTimeout(()=>fail(action==='book'
+      ? 'De agenda antwoordt niet. Je afspraak kan al opgeslagen zijn. App Appiecutzz om dit te controleren voordat je opnieuw boekt.'
+      : 'De online agenda antwoordt niet. Probeer opnieuw of app Appiecutzz.'),12000);
     window[callback]=response=>{
-      resolve(response||{});
-      script.remove();
-      delete window[callback];
+      if(finished)return;
+      finished=true;cleanup();resolve(response||{});
     };
-    script.onerror=()=>{
-      reject(new Error('Booking API niet bereikbaar'));
-      script.remove();
-      delete window[callback];
-    };
+    script.onerror=()=>fail('De online agenda is niet bereikbaar. Probeer opnieuw of app Appiecutzz.');
     script.src=BOOKING_API_URL+'?'+data.toString();
     document.body.appendChild(script);
   });
@@ -511,10 +521,11 @@ function bookingApiRequest(action,params){
 async function loadOnlineBookedSlots(dateValue){
   if(!dateValue||!bookingApiConfigured()) return;
   const data=await bookingApiRequest('list',{date:dateValue});
-  REMOTE_BOOKED_SLOTS[dateValue]=Array.isArray(data.booked)?data.booked:[];
+  if(data.ok===false || !Array.isArray(data.booked)) throw new Error('De agenda geeft geen geldige lijst met afspraken terug.');
+  REMOTE_BOOKED_SLOTS[dateValue]=data.booked;
 }
 async function bookOnlineSlot(payload){
-  if(!bookingApiConfigured()) return {ok:true,local:true};
+  if(!bookingApiConfigured()) throw new Error('Online agenda is niet ingesteld.');
   return bookingApiRequest('book',payload);
 }
 function getBookedSlots(){
@@ -620,7 +631,15 @@ const today=new Date();
 document.getElementById('date').min=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
 
 document.getElementById('date').addEventListener('change',async function(){
-  const [y,mo,d]=this.value.split('-').map(Number);
+  const dateValue=this.value;
+  window._dateLabel='';
+  if(!dateValue){
+    window._selectedDateValue='';
+    document.getElementById('time').value='';
+    document.getElementById('time-options').textContent='Kies eerst een datum hierboven';
+    return;
+  }
+  const [y,mo,d]=dateValue.split('-').map(Number);
   const dt=new Date(y,mo-1,d);
   const idx=dt.getDay();
   const container=document.getElementById('time-options');
@@ -651,11 +670,27 @@ document.getElementById('date').addEventListener('change',async function(){
   err.textContent='⚠ Deze dag is gesloten of niet beschikbaar.';
   err.classList.remove('show');
   window._dateLabel=dateLabel;
-  container.innerHTML="<span style=\"font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;color:rgba(240,236,228,.25);\">Tijden laden...</span>";
-  try{await loadOnlineBookedSlots(this.value);}catch(err){console.error(err);}
+  // Toon tijden direct; controleer geboekte tijden daarna online.
+  renderTimeSlots(dateValue,idx);
   const helper=document.getElementById('time-helper');
-  if(helper) helper.textContent='Kies hieronder je tijd. Je gekozen tijd wordt goud gemarkeerd.';
-  renderTimeSlots(this.value,idx);
+  if(helper) helper.textContent='Beschikbaarheid controleren...';
+  try{
+    await loadOnlineBookedSlots(dateValue);
+    if(window._selectedDateValue!==dateValue)return;
+    const chosenTime=document.getElementById('time').value;
+    renderTimeSlots(dateValue,idx);
+    if(chosenTime){
+      const selectedButton=Array.from(container.querySelectorAll('.time-btn')).find(button=>button.textContent===chosenTime);
+      if(selectedButton){selectedButton.click();}
+    }
+    if(helper) helper.textContent='Kies hieronder je tijd. Je gekozen tijd wordt goud gemarkeerd.';
+  }catch(error){
+    if(window._selectedDateValue!==dateValue)return;
+    if(helper) helper.textContent='Deze tijden zijn nog niet gecontroleerd. Bij bevestigen wordt de agenda opnieuw gecontroleerd.';
+    err.textContent=error.message;
+    err.classList.add('show');
+    console.error(error);
+  }
 });
 
 
@@ -743,7 +778,11 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
   if(!service){showAlert('Kies een dienst.','err');return;}
 
   btn.disabled=true;btn.textContent='Beschikbaarheid checken...';showAlert('','');
-  try{await loadOnlineBookedSlots(window._selectedDateValue);}catch(err){console.error(err);}
+  try{await loadOnlineBookedSlots(window._selectedDateValue);}catch(err){
+    showAlert(err.message,'err');
+    btn.disabled=false;btn.innerHTML='Bevestig Afspraak &nbsp; &#10022;';
+    return;
+  }
   if(!isSlotAvailable(window._selectedDateValue,time,duration)){
     showAlert('Dit tijdslot overlapt met een andere afspraak. Kies een andere tijd.','err');
     renderTimeSlots(window._selectedDateValue,new Date(window._selectedDateValue).getDay());
