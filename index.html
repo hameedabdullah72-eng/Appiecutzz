@@ -458,6 +458,17 @@ function LocatieWhatsAppMessage(dateLabel){
   return 'https://wa.me/31642376172?text='+encodeURIComponent(msg);
 }
 
+function getBookingDate(dateValue){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) return null;
+  const [year,month,day]=dateValue.split('-').map(Number);
+  const date=new Date(year,month-1,day);
+  if(date.getFullYear()!==year || date.getMonth()!==month-1 || date.getDate()!==day) return null;
+  const dayIndex=date.getDay();
+  if(dateValue<document.getElementById('date').min || isWeekend(dayIndex) || !schedule[dayIndex] || getClosedRange(dateValue)) return null;
+  const dayName=NL_DAYS[dayIndex];
+  return {value:dateValue,dayIndex,label:dayName.charAt(0).toUpperCase()+dayName.slice(1)+' '+day+' '+MONTHS[month-1]+' '+year};
+}
+
 function getServiceDuration(service){
   return 45;
 }
@@ -615,6 +626,11 @@ function renderTimeSlots(dateValue,dayIndex){
     const b=document.createElement('button');
     b.type='button';b.className='time-btn';b.textContent=t;
     b.onclick=()=>{
+      if(document.getElementById('date').value!==dateValue){
+        showAlert('De datum is veranderd. Kies opnieuw een tijd.','err');
+        document.getElementById('time').value='';
+        return;
+      }
       if(!isSlotAvailable(dateValue,t,currentDuration)){
         showAlert('Dit tijdslot is al geboekt. Kies een andere tijd.','err');
         renderTimeSlots(dateValue,dayIndex);
@@ -773,19 +789,25 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
   const totalStr='&#8364;'+total.toFixed(2).replace('.',',');
   const btn=document.getElementById('submitBtn');
 
-  if(!window._dateLabel){showAlert('Kies een geldige openingsdag.','err');return;}
+  const selectedDate=getBookingDate(document.getElementById('date').value);
+  if(!selectedDate){showAlert('Kies een doordeweekse datum vanaf vandaag. In het weekend ben ik gesloten.','err');return;}
+  const dateValue=selectedDate.value;
+  const dateLabel=selectedDate.label;
+  window._selectedDateValue=dateValue;
+  window._dateLabel=dateLabel;
   if(!time){showAlert('Selecteer een tijdslot.','err');return;}
   if(!service){showAlert('Kies een dienst.','err');return;}
+  if(!getSlots(selectedDate.dayIndex).includes(time)){showAlert('Deze tijd valt buiten de openingstijden. Kies opnieuw een tijd.','err');return;}
 
   btn.disabled=true;btn.textContent='Beschikbaarheid checken...';showAlert('','');
-  try{await loadOnlineBookedSlots(window._selectedDateValue);}catch(err){
+  try{await loadOnlineBookedSlots(dateValue);}catch(err){
     showAlert(err.message,'err');
     btn.disabled=false;btn.innerHTML='Bevestig Afspraak &nbsp; &#10022;';
     return;
   }
-  if(!isSlotAvailable(window._selectedDateValue,time,duration)){
+  if(!isSlotAvailable(dateValue,time,duration)){
     showAlert('Dit tijdslot overlapt met een andere afspraak. Kies een andere tijd.','err');
-    renderTimeSlots(window._selectedDateValue,new Date(window._selectedDateValue).getDay());
+    renderTimeSlots(dateValue,selectedDate.dayIndex);
     btn.disabled=false;btn.innerHTML='Bevestig Afspraak &nbsp; &#10022;';
     return;
   }
@@ -802,7 +824,7 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
 
   try{
     const onlineBooking=await bookOnlineSlot({
-      date:window._selectedDateValue,
+      date:dateValue,
       time:time,
       name:name,
       phone:phone,
@@ -818,8 +840,8 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
     if(!onlineBooking.ok){
       if(onlineBooking.reason==='booked'){
         showAlert('Dit tijdslot is net geboekt. Kies een andere tijd.','err');
-        await loadOnlineBookedSlots(window._selectedDateValue);
-        renderTimeSlots(window._selectedDateValue,new Date(window._selectedDateValue).getDay());
+        await loadOnlineBookedSlots(dateValue);
+        renderTimeSlots(dateValue,selectedDate.dayIndex);
       }else{
         showAlert('Online boeken lukt nu niet. Probeer het opnieuw of app voor meer info.','err');
       }
@@ -841,8 +863,8 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
       customer_email:email,
       to_email:email,
       reply_to:email,
-      datum:window._dateLabel,
-      date:window._dateLabel,
+      datum:dateLabel,
+      date:dateLabel,
       tijdslot:time,
       time:time,
       dienst:service,
@@ -852,12 +874,12 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
       duur:duration+' minuten',
       duration:duration+' minuten',
       opmerking:extras.length?extras.join(', '):"Geen extra's",
-      message:'Nieuwe afspraak: '+name+' op '+window._dateLabel+' om '+time+' voor '+service+' ('+duration+' min). Telefoon: '+phone+' Email: '+email
+      message:'Nieuwe afspraak: '+name+' op '+dateLabel+' om '+time+' voor '+service+' ('+duration+' min). Telefoon: '+phone+' Email: '+email
     };
 
     // Meteen lokaal blokkeren, ook als EmailJS faalt. Zo kan dezelfde/overlappende tijd niet open blijven.
-    saveBookedSlot(window._selectedDateValue,time,duration);
-    await loadOnlineBookedSlots(window._selectedDateValue).catch(()=>{});
+    saveBookedSlot(dateValue,time,duration);
+    await loadOnlineBookedSlots(dateValue).catch(()=>{});
 
     // Mail naar Appiecutzz + bevestigingsmail naar de klant
 const ownerMail = emailjs.send(
@@ -891,10 +913,10 @@ if (mailResults[1].status === 'rejected') {
 }
 
     document.getElementById('mName').innerHTML='Hey '+name+' &#128075;';
-    document.getElementById('mDetails').innerHTML=(window._dateLabel)+' om '+time+' &#8212; '+service+' ('+duration+' min)';
+    document.getElementById('mDetails').innerHTML=(dateLabel)+' om '+time+' &#8212; '+service+' ('+duration+' min)';
     document.getElementById('mPrice').innerHTML='Totaal: '+totalStr;
     document.getElementById('mTikkie').style.display='none';
-    setupCalendarEvent(window._selectedDateValue,time,service,name);
+    setupCalendarEvent(dateValue,time,service,name);
     document.getElementById('modalOverlay').classList.add('on');
 
     this.reset();updatePrice();
