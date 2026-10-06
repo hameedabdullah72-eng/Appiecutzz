@@ -313,8 +313,8 @@ footer{position:relative;z-index:1;background:var(--navy);border-top:1px solid r
       <div class="day-card open"><div class="day-dot"></div><span class="day-name">Woensdag</span><div class="day-hrs">15:30 &ndash; 17:30</div></div>
       <div class="day-card open"><div class="day-dot"></div><span class="day-name">Donderdag</span><div class="day-hrs">15:30 &ndash; 17:30</div></div>
       <div class="day-card open"><div class="day-dot"></div><span class="day-name">Vrijdag</span><div class="day-hrs">15:30 &ndash; 17:30</div></div>
-      <div class="day-card open"><div class="day-dot"></div><span class="day-name">Zaterdag</span><div class="day-hrs"> Ik knip helaas deze dag niet. Kijk doordeweeks </div>
-      <div class="day-card open"><div class="day-dot"></div><span class="day-name">Zondag</span><div class="day-hrs">Ik knip helaas deze dag niet. Kijk doordeweeks</div>
+      <div class="day-card open"><div class="day-dot"></div><span class="day-name">Zaterdag</span><div class="day-hrs"> Kijk doordeweeks graag</div></div>
+      <div class="day-card open"><div class="day-dot"></div><span class="day-name">Zondag</span><div class="day-hrs"> Kijk doordeweeks graag</div></div>
     </div>
   </div>
 </section>
@@ -432,21 +432,15 @@ document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
 (function a(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.14;ry+=(my-ry)*.14;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
 
 const schedule={
-  0:null, // Zondag: helaas dicht, kijk doordeweeks
+  0:null, // Zondag: gesloten
   1:{s:[15,30],e:[17,30]}, // Maandag
   2:{s:[17,0],e:[19,30]},  // Dinsdag
   3:{s:[15,30],e:[17,30]}, // Woensdag
   4:{s:[15,30],e:[17,30]}, // Donderdag
   5:{s:[15,30],e:[17,30]}, // Vrijdag
+  6:null, // Zaterdag: gesloten
 };
 
-const SPECIAL_HOURS={
-  '2026-07-13':{s:[12,0],e:[15,0]},
-  '2026-07-14':{s:[12,0],e:[15,0]}
-};
-
-const NEW_HOURS_START='2026-08-25';
-const OLD_WEEKDAY_HOURS={s:[12,0],e:[17,0]};
 
 const NL_DAYS=['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
 const MONTHS=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
@@ -470,8 +464,6 @@ function getServiceDuration(service){
 function getSlots(d){
   let s=schedule[d];
   const selected=window._selectedDateValue||'';
-  if(selected && selected<NEW_HOURS_START && d>=1 && d<=5) s=OLD_WEEKDAY_HOURS;
-  if(selected && SPECIAL_HOURS[selected]) s=SPECIAL_HOURS[selected];
   if(!s)return[];
   const service=document.getElementById('service')?document.getElementById('service').value:'';
   const duration=getServiceDuration(service);
@@ -645,9 +637,9 @@ document.getElementById('date').addEventListener('change',async function(){
     window._dateLabel='';window._selectedDateValue='';return;
   }
   if(isWeekend(idx)){
-    err.textContent='⚠ Weekend is alleen op aanvraag en kost €15. Stuur eerst een WhatsApp bericht.';
+    err.textContent='Ik knip niet in het weekend. Kies een doordeweekse dag.';
     err.classList.add('show');
-    container.innerHTML='<a class="calendar-btn" href="'+weekendWhatsAppMessage(dateLabel)+'" target="_blank" rel="noopener">Weekend aanvragen via WhatsApp</a>';
+    container.textContent='Gesloten op zaterdag en zondag';
     window._dateLabel='';window._selectedDateValue='';return;
   }
   if(!schedule[idx]){
@@ -682,7 +674,7 @@ function updatePrice(){
   const duration=getServiceDuration(service);
   const hasDrink=document.getElementById('drink').checked;
   let total=getServicePrice(service);
-  if(hasDrink && !document.getElementById('drink').disabled) total+=1.5;
+  if(hasDrink && !document.getElementById('drink').disabled) total+=2;
   document.getElementById('priceTotal').innerHTML='&#8364;'+total.toFixed(2).replace('.',',');
 
   if(window._selectedDateValue){
@@ -742,7 +734,7 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
   const duration=getServiceDuration(service);
   const hasDrink=document.getElementById('drink').checked;
   let total=getServicePrice(service);
-  if(hasDrink && !document.getElementById('drink').disabled) total+=1.5;
+  if(hasDrink && !document.getElementById('drink').disabled) total+=2;
   const totalStr='&#8364;'+total.toFixed(2).replace('.',',');
   const btn=document.getElementById('submitBtn');
 
@@ -767,7 +759,7 @@ document.getElementById('bookingForm').addEventListener('submit',async function(
   }
 
   const extras=[];
-  if(hasDrink && !document.getElementById('drink').disabled) extras.push('Drankje (+&#8364;1,50)');
+  if(hasDrink && !document.getElementById('drink').disabled) extras.push('Drankje (+€2,00)');
 
   try{
     const onlineBooking=await bookOnlineSlot({
@@ -885,7 +877,6 @@ function closeModal(){document.getElementById('modalOverlay').classList.remove('
 </script>
 </body>
 </html>
-
 
 
 
